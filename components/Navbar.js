@@ -50,7 +50,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
           {Object.keys(cart).map((k) => {
             return <li key={k} className='my-3'>
               <div className="item flex">
-                <div className='font-semibold w-2/3'>{cart[k].name}</div>
+                <div className='font-semibold w-2/3'>{cart[k].name}({cart[k].size}/{cart[k].variant})</div>
                 <div className='flex items-center justify-center w-1/3 text-lg'>
                   <AiFillMinusCircle onClick={() => { removeFromCart(k, 1) }} className='cursor-pointer text-pink-500' /><span className='mx-2'> {cart[k].qty} </span><AiFillPlusCircle onClick={() => { addToCart(k, 1) }} className='cursor-pointer text-pink-500' /></div>
               </div>
