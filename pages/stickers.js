@@ -141,8 +141,6 @@ const stickers = () => {
                 </div></Link>
             </div>
 
-
-
           </div>
         </div>
       </section>
