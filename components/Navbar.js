@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
 import { MdAccountCircle } from 'react-icons/md';
@@ -7,7 +7,10 @@ import { MdAccountCircle } from 'react-icons/md';
 import { useRef } from 'react';
 
 
-const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
+
+const Navbar = ({ user, logout, cart, addToCart, removeFromCart, clearCart, subTotal }) => {
+
+  const [dropdown, setDropdown] = useState(false)
 
   const ref = useRef()
 
@@ -26,7 +29,8 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
 
   return (
     <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white'>
-      <div className="logo mx-5">
+      
+      <div className="logo mr-auto md:mx-5">
         <Link href={"/"}><img src="/logo2.png" alt="" /></Link>
       </div>
       <div className="nav">
@@ -38,8 +42,18 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
         </ul>
       </div>
       <div className="cart absolute right-0 top-2 mx-5 mt-2 font-bold flex ">
-        <Link href={'/login'}><MdAccountCircle className='mx-2 text-xl md:text-3xl' /></Link>
+        {!user.value && <Link href={'/login'}><button className='mx-2 bg-pink-600 rounded text-sm text-white p-2'>Login</button></Link>}
+        <a onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{user.value && <Link href={'/login'}><MdAccountCircle className='mx-2 text-xl md:text-3xl' /></Link>}
+          {dropdown && <div className='absolute right-8 bg-pink-300 top-7 py-4 rounded-md px-5 w-36'>
+            <ul>
+              <Link href={"/myaccount"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>My Account</li></Link>
+              <Link href={"/orders"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Orders</li></Link>
+              <li onClick={logout} className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Logout</li>
+            </ul>
+          </div>}</a>
+
         <button onClick={toggleCart}><AiOutlineShoppingCart className='text-xl md:text-3xl' /></button>
+
 
       </div>
       <div ref={ref} className={`w-72 z-10 h-[100vh] overflow-x-hidden sideCart absolute top-0 right-0 bg-pink-100 px-8 py-10 transform transition-transform ${Object.keys(cart).length !== 0 ? 'translate-x-0' : 'translate-x-full'}`}>
