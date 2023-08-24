@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }) {
   const [cart, setCart] = useState({})
   const[subTotal, setSubTotal] = useState(0)
   const [user, setUser] = useState({value: null})
-  const [key, setKey] = useState(0)
+  const [key, setKey] = useState()
 
 
   const router = useRouter()
@@ -55,6 +55,7 @@ export default function App({ Component, pageProps }) {
     setUser({value:null})
     setKey(Math.random())
     toast.success('You have been logged out successfully!')
+    router.push('/')
   }
 
 
@@ -106,6 +107,9 @@ export default function App({ Component, pageProps }) {
   const clearCart = ()=>{
     setCart({})
     saveCart({})
+    toast.info('Your cart has been cleared!')
+
+
   }
 
 
@@ -130,7 +134,7 @@ export default function App({ Component, pageProps }) {
       />
   
 
-  <Navbar logout={logout} user={user} key={key} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />
+  {key && <Navbar logout={logout} user={user} key={key} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />}
 
   <LoadingBar
         color='#ff2d55'

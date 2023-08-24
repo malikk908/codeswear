@@ -43,14 +43,14 @@ const Navbar = ({ user, logout, cart, addToCart, removeFromCart, clearCart, subT
       </div>
       <div className="cart absolute right-0 top-2 mx-5 mt-2 font-bold flex ">
         {!user.value && <Link href={'/login'}><button className='mx-2 bg-pink-600 rounded text-sm text-white p-2'>Login</button></Link>}
-        <a onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{user.value && <Link href={'/login'}><MdAccountCircle className='mx-2 text-xl md:text-3xl' /></Link>}
+        <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{user.value && <Link href={'/login'}><MdAccountCircle className='mx-2 text-xl md:text-3xl' /></Link>}
           {dropdown && <div className='absolute right-8 bg-pink-300 top-7 py-4 rounded-md px-5 w-36'>
             <ul>
               <Link href={"/myaccount"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>My Account</li></Link>
               <Link href={"/orders"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Orders</li></Link>
               <li onClick={logout} className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Logout</li>
             </ul>
-          </div>}</a>
+          </div>}</span>
 
         <button onClick={toggleCart}><AiOutlineShoppingCart className='text-xl md:text-3xl' /></button>
 
