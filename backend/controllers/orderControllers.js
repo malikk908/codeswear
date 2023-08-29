@@ -12,7 +12,11 @@ export const checkoutSession = async (req, res) => {
                     currency: "pkr",
                     product_data: {
                         name: items[k].name,
-                        metadata: { productId: k }
+                        metadata: {
+                            productId: k,
+                            size: items[k].size,
+                            variant: items[k].variant
+                        }
                     },
                     unit_amount: items[k].price * 100,
                 },
@@ -26,7 +30,7 @@ export const checkoutSession = async (req, res) => {
         try {
             // Create Checkout Sessions from body params.
             const session = await stripe.checkout.sessions.create({
-                
+
                 line_items: line_items,
                 mode: 'payment',
                 success_url: `${req.headers.origin}/?success=true`,
@@ -49,26 +53,30 @@ export const checkoutSession = async (req, res) => {
 
 async function getCartItems(line_items) {
     return new Promise((resolve, reject) => {
-      let cartItems = [];
-  
-      line_items?.data?.forEach(async (item) => {
-        const product = await stripe.products.retrieve(item.price.product);
-        const productId = product.metadata.productId;
+        let cartItems = [];
 
-  
-        cartItems.push({
-          productId: productId,
-          name: product.name,
-          price: item.price.unit_amount / 100,
-          quantity: item.quantity,
+        line_items?.data?.forEach(async (item) => {
+            const product = await stripe.products.retrieve(item.price.product);
+            const productId = product.metadata.productId;
+            const size = product.metadata.size;
+            const variant = product.metadata.variant;
+
+
+            cartItems.push({
+                productId: productId,
+                name: product.name,
+                size: size,
+                variant: variant,
+                price: item.price.unit_amount / 100,
+                quantity: item.quantity,
+            });
+
+            if (cartItems.length === line_items?.data.length) {
+                resolve(cartItems);
+            }
         });
-  
-        if (cartItems.length === line_items?.data.length) {
-          resolve(cartItems);
-        }
-      });
     });
-  }
+}
 
 export const webhook = async (req, res) => {
     try {
@@ -90,22 +98,22 @@ export const webhook = async (req, res) => {
             const amountPaid = session.amount_total / 100;
             const orderId = session.metadata.orderId;
             const address = session.metadata.address;
-      
+
             const paymentInfo = {
-              id: session.payment_intent,
-              status: session.payment_status,
-              amountPaid,
+                id: session.payment_intent,
+                status: session.payment_status,
+                amountPaid,
             };
-      
+
             const orderData = {
-              email: userEmail,
-              orderId,
-              paymentInfo,
-              orderItems,
-              address             
-              
+                email: userEmail,
+                orderId,
+                paymentInfo,
+                orderItems,
+                address
+
             };
-      
+
             const order = await Order.create(orderData);
             res.status(201).json({ success: true });
         }

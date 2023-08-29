@@ -27,6 +27,14 @@ const OrderSchema = new mongoose.Schema({
             type: String,
             required: true,
           },
+          size: {
+            type: String,
+            required: true,
+          },
+          variant: {
+            type: String,
+            required: true,
+          },
           quantity: {
             type: String,
             required: true,
