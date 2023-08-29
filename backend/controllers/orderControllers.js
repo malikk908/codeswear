@@ -33,7 +33,8 @@ export const checkoutSession = async (req, res) => {
 
                 line_items: line_items,
                 mode: 'payment',
-                success_url: `${req.headers.origin}/?success=true`,
+                // success_url: `${req.headers.origin}/?success=true`,
+                success_url: `${req.headers.origin}/ordersuccess?sessionId={CHECKOUT_SESSION_ID}`,
                 cancel_url: `${req.headers.origin}/?canceled=true`,
                 customer_email: req.body.email,
                 metadata: { orderId, address }
@@ -116,6 +117,7 @@ export const webhook = async (req, res) => {
 
             const order = await Order.create(orderData);
             res.status(201).json({ success: true });
+            
         }
 
         // check if the cart is tempered with

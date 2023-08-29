@@ -2,10 +2,13 @@ import React from 'react'
 import mongoose from "mongoose";
 import Order from '@/models/Order';
 
+
 const MyOrder = ({order}) => {
   const {orderId, paymentInfo, orderItems} = order
 
   console.log(orderItems)
+
+  
 
   return (
     <div>
