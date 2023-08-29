@@ -6,7 +6,13 @@ import useSWR from 'swr'
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 
-const OrderSuccess = () => {
+const OrderSuccess = ({ clearCart }) => {
+
+    useEffect(() => {
+      clearCart()    
+      
+    }, [])
+    
 
     const { query: { sessionId } } = useRouter()
 
