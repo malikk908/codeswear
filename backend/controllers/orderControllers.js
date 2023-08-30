@@ -1,5 +1,7 @@
 import getRawBody from 'raw-body';
 import Order from '@/models/Order';
+import Product from '@/models/Product';
+
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 
@@ -25,6 +27,23 @@ export const checkoutSession = async (req, res) => {
         })
         const orderId = req.body.oid;
         const address = req.body.address;
+
+        //check cart tempering
+
+        let product, sumTotal=0
+        for(let i in items){
+            console.log(i)
+            sumTotal += items[i].price * items[i].qty
+            product = await Product.findOne({slug: i})
+            if(product.price != items[i].price){
+                res.status(400).json({success: false, "error":"The price of some items in your cart has changed, please clear cart & try again"})
+                return
+            }
+        }
+        if(sumTotal !== req.body.subTotal){
+            res.status(400).json({success: false, "error":"The price of some items in your cart has changed, please clear cart & try again"})
+            return
+        }
 
 
         try {

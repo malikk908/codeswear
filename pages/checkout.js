@@ -3,6 +3,8 @@ import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
 import Link from 'next/link'
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 import { loadStripe } from '@stripe/stripe-js';
@@ -111,6 +113,7 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
 
     } catch (error) {
       console.log(error)
+      toast.error(error.response.data.error)
     }
 
   }
@@ -129,6 +132,18 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
 
   return (
     <div className='container px-6 sm:m-auto'>
+      <ToastContainer
+        position="top-left"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <h1 className='font-bold text-3xl text-center my-8'>Checkout</h1>
       <h2 className='font-semibold text-xl'>1. Delivery Details</h2>
 
