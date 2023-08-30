@@ -111,8 +111,11 @@ export default function App({ Component, pageProps }) {
     setCart({})
     saveCart({})
     toast.info('Your cart has been cleared!')
+  }
 
-
+  const clearCartAfterCheckout = ()=>{
+    setCart({})
+    saveCart({})   
   }
 
 
@@ -147,7 +150,7 @@ export default function App({ Component, pageProps }) {
         onLoaderFinished={() => setProgress(0)}
       />
   
-  <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} {...pageProps} />
+  <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />
   
   <Footer/>
 

@@ -29,7 +29,7 @@ const MyOrder = ({order}) => {
           return <div key={k.productId} className="flex border-t border-gray-200 py-2">
           <span className="text-gray-500">{k.name} ({k.size}/{k.variant})</span>
           <span className="m-auto text-gray-500"> {k.quantity} </span>
-          <span className="m-auto text-gray-900">Rs. {k.price}</span>
+          <span className="m-auto text-gray-900">Rs. {k.price * k.quantity}</span>
         </div>
         })}
         

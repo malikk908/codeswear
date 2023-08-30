@@ -28,15 +28,19 @@ export const checkoutSession = async (req, res) => {
         const orderId = req.body.oid;
         const address = req.body.address;
 
-        //check cart tempering
+        //check cart tempering, OOS check
 
         let product, sumTotal=0
         for(let i in items){
             console.log(i)
             sumTotal += items[i].price * items[i].qty
             product = await Product.findOne({slug: i})
+            if(product.availableQty < items[i].qty){
+                res.status(400).json({success: false, "error":"Some items in your cart have gone out of stock. Your cart has been cleared, please try again"})
+                return
+            }
             if(product.price != items[i].price){
-                res.status(400).json({success: false, "error":"The price of some items in your cart has changed, please clear cart & try again"})
+                res.status(400).json({success: false, "error":"The price of some items in your cart has changed. Your cart has been cleared, please try again"})
                 return
             }
         }
@@ -135,14 +139,17 @@ export const webhook = async (req, res) => {
             };
 
             const order = await Order.create(orderData);
+
+            let products = order.orderItems
+
+            for(let i = 0; i < products.length; i++){
+                await Product.findOneAndUpdate({slug: products[i].productId}, {$inc :{"availableQty": - products[i].quantity }})
+            }
+
+
             res.status(201).json({ success: true });
             
         }
-
-        // check if the cart is tempered with
-
-        // check if the cart items are out of stock
-
 
 
     } catch (error) {

@@ -5,8 +5,6 @@ import Link from 'next/link'
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-
 import { loadStripe } from '@stripe/stripe-js';
 
 
@@ -15,9 +13,7 @@ const stripePromise = loadStripe(
 );
 
 
-
-
-const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
+const checkout = ({ cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -64,36 +60,10 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
     } else {
       setDisabled(true)
     }
-
   }
 
-
-
-
-
   const handleCheckout = async () => {
-
-    // try {
-    //   const data = { cart, subTotal }
-    //   // console.log(data)
-    //   let res = await fetch(`/api/checkout_sessions`, {
-    //     method: "POST", // or 'PUT'
-    //     headers: {
-    //       "Content-Type": "application/json",          
-    //     },
-    //     body: JSON.stringify(data),
-    //   })
-
-    //   let response = await res.json()
-    //   // console.log(response)
-
-    // } catch (error) {
-    //   console.log(error)
-
-    // }
-
-    // ${process.env.NEXT_PUBLIC_HOST}
-
+   
     try {
       let oid = Math.floor(Math.random() * Date.now())
       const { data } = await axios.post(
@@ -113,6 +83,7 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
 
     } catch (error) {
       console.log(error)
+      clearCartAfterCheckout()
       toast.error(error.response.data.error, {
         position: "top-left",
         autoClose: 2000,
@@ -124,7 +95,6 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
         theme: "light",
         });
     }
-
   }
 
   React.useEffect(() => {
@@ -138,6 +108,7 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
       console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
     }
   }, []);
+
 
   return (
     <div className='container px-6 sm:m-auto'>      
