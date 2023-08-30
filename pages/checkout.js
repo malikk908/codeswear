@@ -22,35 +22,51 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
   const [pincode, setPincode] = useState('')
+  const [city, setCity] = useState('')
+  const [state, setState] = useState('')
   const [disabled, setDisabled] = useState(true)
 
-  const handleChange = (e) => {
-    if(e.target.name == 'name'){
+  const handleChange = async (e) => {
+    if (e.target.name == 'name') {
       setName(e.target.value)
     }
-    else if(e.target.name == 'email'){
+    else if (e.target.name == 'email') {
       setEmail(e.target.value)
     }
-    else if(e.target.name == 'address'){
+    else if (e.target.name == 'address') {
       setAddress(e.target.value)
     }
-    else if(e.target.name == 'phone'){
+    else if (e.target.name == 'phone') {
       setPhone(e.target.value)
     }
-    else if(e.target.name == 'pincode'){
+    else if (e.target.name == 'pincode') {
       setPincode(e.target.value)
+      if (e.target.value.length == 6) {
+        let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+        let pinJson = await pins.json()
+        if (Object.keys(pinJson).includes(e.target.value)) {
+          setCity(pinJson[e.target.value][1])
+          setState(pinJson[e.target.value][0])
+        } else {
+          setCity('')
+          setState('')
+        }
+      } else {
+        setCity('')
+        setState('')
+      }
     }
 
-    if(name.length>3 && email.length>3 & address.length>3 && phone.length>3 && pincode.length>1){
+    if (name.length > 3 && email.length > 3 & address.length > 3 && phone.length > 3 && pincode.length > 1) {
       setDisabled(false)
-    }else{
+    } else {
       setDisabled(true)
     }
-    
+
   }
 
 
-  
+
 
 
   const handleCheckout = async () => {
@@ -78,7 +94,7 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
 
     try {
       let oid = Math.floor(Math.random() * Date.now())
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         `/api/orders/checkout_session`,
         {
           items: cart,
@@ -92,10 +108,10 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
         }
       );
       window.location.href = data.url
-      
+
     } catch (error) {
       console.log(error)
-    }   
+    }
 
   }
 
@@ -167,14 +183,14 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
         <div className="px-2 w-1/2">
           <div className="relative mb-4">
             <label htmlFor="state" className="leading-7 text-sm text-gray-600">State</label>
-            <input readOnly type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input onChange={handleChange} value={state} type="text" id="state" name="state" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
 
         </div>
         <div className="px-2 w-1/2">
           <div className="relative mb-4">
             <label htmlFor="city" className="leading-7 text-sm text-gray-600">City</label>
-            <input readOnly type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input onChange={handleChange} value={city} type="text" id="city" name="city" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
 
         </div>
