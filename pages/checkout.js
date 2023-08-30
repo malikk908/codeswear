@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
-import Link from 'next/link'
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { loadStripe } from '@stripe/stripe-js';
 
@@ -13,10 +12,40 @@ const stripePromise = loadStripe(
 );
 
 
-const checkout = ({ cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
+const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
+
+  const [email, setEmail] = useState('')
+
+  
+    useEffect(() => {
+
+      if(user.value){     
+      async function fetchEmail() {
+        const token = localStorage.getItem('token');
+        const { data } = await axios.post(
+          `/api/getemail`,
+          {
+            token
+          }
+        );
+        const email = data.email
+        setEmail(email) 
+      }
+  
+      fetchEmail()
+    }else{
+      return
+    }
+    
+  
+    }, [])
+
+  
+
+  
+
 
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
   const [address, setAddress] = useState('')
   const [phone, setPhone] = useState('')
   const [pincode, setPincode] = useState('')
@@ -27,6 +56,7 @@ const checkout = ({ cart, addToCart, removeFromCart, clearCartAfterCheckout, sub
   const handleChange = async (e) => {
     if (e.target.name == 'name') {
       setName(e.target.value)
+      console.log(user)
     }
     else if (e.target.name == 'email') {
       setEmail(e.target.value)
@@ -63,7 +93,7 @@ const checkout = ({ cart, addToCart, removeFromCart, clearCartAfterCheckout, sub
   }
 
   const handleCheckout = async () => {
-   
+
     try {
       let oid = Math.floor(Math.random() * Date.now())
       const { data } = await axios.post(
@@ -93,7 +123,7 @@ const checkout = ({ cart, addToCart, removeFromCart, clearCartAfterCheckout, sub
         draggable: true,
         progress: undefined,
         theme: "light",
-        });
+      });
     }
   }
 
@@ -111,7 +141,7 @@ const checkout = ({ cart, addToCart, removeFromCart, clearCartAfterCheckout, sub
 
 
   return (
-    <div className='container px-6 sm:m-auto'>      
+    <div className='container px-6 sm:m-auto'>
       <h1 className='font-bold text-3xl text-center my-8'>Checkout</h1>
       <h2 className='font-semibold text-xl'>1. Delivery Details</h2>
 
@@ -126,7 +156,8 @@ const checkout = ({ cart, addToCart, removeFromCart, clearCartAfterCheckout, sub
         <div className="px-2 w-1/2">
           <div className="relative mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            <input onChange={handleChange} value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            {user.value ? <input readOnly value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> : <input onChange={handleChange} value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> }
+            
           </div>
 
         </div>
