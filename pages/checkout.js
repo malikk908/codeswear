@@ -113,7 +113,16 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
 
     } catch (error) {
       console.log(error)
-      toast.error(error.response.data.error)
+      toast.error(error.response.data.error, {
+        position: "top-left",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
     }
 
   }
@@ -131,19 +140,7 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
   }, []);
 
   return (
-    <div className='container px-6 sm:m-auto'>
-      <ToastContainer
-        position="top-left"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+    <div className='container px-6 sm:m-auto'>      
       <h1 className='font-bold text-3xl text-center my-8'>Checkout</h1>
       <h2 className='font-semibold text-xl'>1. Delivery Details</h2>
 
