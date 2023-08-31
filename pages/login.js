@@ -25,7 +25,6 @@ const login = () => {
     e.preventDefault()
 
     const data = { email, password }
-    console.log(data)
     let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/login`, {
       method: "POST", // or 'PUT'
       headers: {
@@ -35,7 +34,6 @@ const login = () => {
     })
 
     let response = await res.json()
-    console.log(response)  
 
     if(response.success){
       localStorage.setItem('token', response.token)

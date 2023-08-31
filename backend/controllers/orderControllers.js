@@ -1,6 +1,8 @@
 import getRawBody from 'raw-body';
 import Order from '@/models/Order';
 import Product from '@/models/Product';
+import pincodes from '../../pincodes.json'
+
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
@@ -27,6 +29,13 @@ export const checkoutSession = async (req, res) => {
         })
         const orderId = req.body.oid;
         const address = req.body.address;
+
+        //check pincode serviceablitiyty
+        if(!Object.keys(pincodes).includes(req.body.pincode)){
+            res.status(400).json({success: false, dontClearCart: true, "error":"Sorry, your pincode is not serviceable"})
+            return
+        }
+        
 
         //check cart tempering, OOS check
 
