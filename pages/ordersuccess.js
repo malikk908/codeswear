@@ -30,8 +30,6 @@ const OrderSuccess = ({ clearCartAfterCheckout }) => {
 
     }))
 
-    console.log(products)
-
     const amountPaid = checkoutSession?.amount_total / 100;
     const orderId = checkoutSession?.metadata.orderId;
 
@@ -40,10 +38,6 @@ const OrderSuccess = ({ clearCartAfterCheckout }) => {
         status: checkoutSession?.payment_status,
         amountPaid,
     };
-
-
-
-
 
 
     return (

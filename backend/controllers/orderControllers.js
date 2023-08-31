@@ -36,7 +36,6 @@ export const checkoutSession = async (req, res) => {
             return
         }
         for(let i in items){
-            console.log(i)
             sumTotal += items[i].price * items[i].qty
             product = await Product.findOne({slug: i})
             if(product.availableQty < items[i].qty){
@@ -53,12 +52,14 @@ export const checkoutSession = async (req, res) => {
             return
         }
 
-        if(req.body.phone.length !== 10 || !Number.isInteger(req.body.phone)){
+
+        if(req.body.phone.length !== 10){
             res.status(400).json({success: false, dontClearCart: true, "error":"Please enter your 10 digit phone number"})
+            
             return
         }
 
-        if(req.body.pincode.length !== 6 || !Number.isInteger(req.body.pincode)){
+        if(req.body.pincode.length !== 6){
             res.status(400).json({success: false, dontClearCart: true, "error":"Please enter your 6 digit pincode"})
             return
         }
@@ -129,7 +130,6 @@ export const webhook = async (req, res) => {
 
             const line_items = await stripe.checkout.sessions.listLineItems(event.data.object.id)
 
-            console.log(line_items);
 
             const orderItems = await getCartItems(line_items);
             const userEmail = session.customer_email;
