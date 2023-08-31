@@ -31,6 +31,10 @@ export const checkoutSession = async (req, res) => {
         //check cart tempering, OOS check
 
         let product, sumTotal=0
+        if(req.body.subTotal <= 0){
+            res.status(400).json({success: false, "error":"Your cart is empty, please build your cart & try again"})
+            return
+        }
         for(let i in items){
             console.log(i)
             sumTotal += items[i].price * items[i].qty
@@ -46,6 +50,16 @@ export const checkoutSession = async (req, res) => {
         }
         if(sumTotal !== req.body.subTotal){
             res.status(400).json({success: false, "error":"The price of some items in your cart has changed, please clear cart & try again"})
+            return
+        }
+
+        if(req.body.phone.length !== 10 || !Number.isInteger(req.body.phone)){
+            res.status(400).json({success: false, dontClearCart: true, "error":"Please enter your 10 digit phone number"})
+            return
+        }
+
+        if(req.body.pincode.length !== 6 || !Number.isInteger(req.body.pincode)){
+            res.status(400).json({success: false, dontClearCart: true, "error":"Please enter your 6 digit pincode"})
             return
         }
 

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import mongoose from "mongoose";
 import Product from "@/models/Product"
 import { ToastContainer, toast } from 'react-toastify';
@@ -8,7 +8,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 export default function Post({ addToCart, buyNow, product, variants }) {
 
-  console.log(product, variants)
 
   const router = useRouter()
   const { slug } = router.query
@@ -37,9 +36,16 @@ export default function Post({ addToCart, buyNow, product, variants }) {
   const [color, setColor] = useState(product.color)
   const [size, setSize] = useState(product.size)
 
+  useEffect(() => {
+    setColor(product.color)
+    setSize(product.size)
+  }, [router.query])
+
+
+
   const refreshVariant = (newsize, newcolor) => {
     let url = `${process.env.NEXT_PUBLIC_HOST}/product/${variants[newcolor][newsize]['slug']}`
-    window.location = url;
+    router.push(url);
   }
 
 

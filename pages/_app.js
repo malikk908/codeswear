@@ -10,7 +10,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import LoadingBar from 'react-top-loading-bar'
 
 
-
 export default function App({ Component, pageProps }) {
 
   const [progress, setProgress] = useState(0)
@@ -20,9 +19,7 @@ export default function App({ Component, pageProps }) {
   const [user, setUser] = useState({value: null})
   const [key, setKey] = useState()
 
-
   const router = useRouter()
-
 
 
   useEffect(()=>{
@@ -117,7 +114,6 @@ export default function App({ Component, pageProps }) {
     setCart({})
     saveCart({})   
   }
-
 
 
   return <>

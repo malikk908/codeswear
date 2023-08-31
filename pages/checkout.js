@@ -16,10 +16,10 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
 
   const [email, setEmail] = useState('')
 
-  
-    useEffect(() => {
 
-      if(user.value){     
+  useEffect(() => {
+
+    if (user.value) {
       async function fetchEmail() {
         const token = localStorage.getItem('token');
         const { data } = await axios.post(
@@ -29,20 +29,17 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
           }
         );
         const email = data.email
-        setEmail(email) 
+        setEmail(email)
       }
-  
+
       fetchEmail()
-    }else{
+    }
+    else {
       return
     }
-    
-  
-    }, [])
 
-  
+  }, [])
 
-  
 
 
   const [name, setName] = useState('')
@@ -113,7 +110,9 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
 
     } catch (error) {
       console.log(error)
-      clearCartAfterCheckout()
+      if(error.response.data.dontClearCart){
+        clearCartAfterCheckout()
+      }      
       toast.error(error.response.data.error, {
         position: "top-left",
         autoClose: 2000,
@@ -156,8 +155,8 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
         <div className="px-2 w-1/2">
           <div className="relative mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            {user.value ? <input readOnly value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> : <input onChange={handleChange} value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> }
-            
+            {user.value ? <input readOnly value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> : <input onChange={handleChange} value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />}
+
           </div>
 
         </div>
@@ -241,7 +240,7 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
 
 
       <section>
-        <button disabled={false} onClick={handleCheckout} className={`flex mr-2 text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none ${!disabled ? `hover:bg-pink-600` : 'disabled:opacity-50'}  rounded text-sm`} type="submit" role="link"><BsFillBagCheckFill className='m-1 mr-3' />
+        <button disabled={disabled} onClick={handleCheckout} className={`flex mr-2 text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none ${!disabled ? `hover:bg-pink-600` : 'disabled:opacity-50'}  rounded text-sm`} type="submit" role="link"><BsFillBagCheckFill className='m-1 mr-3' />
           Pay Rs.{subTotal}
         </button>
       </section>
