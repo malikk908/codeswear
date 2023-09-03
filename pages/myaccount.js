@@ -168,32 +168,38 @@ const MyAccount = () => {
     const token = localStorage.getItem('token')
     if (npassword === cpassword) {
       try {
+        const res = await axios.post(
+          `/api/updatepassword`,
+          {
+            token,
+            epassword,
+            npassword,
+            cpassword
+          }
+        );
+        console.log(res)
+        if (res.data.success) {
+          toast.success(('Successfully Updated'), {
+            position: "top-left",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          })
+        }
 
       } catch (error) {
+        console.log(error)
+          if (!error.response.data.success) {
+            
+            toast.error(error.response.data.error)
+          }
 
       }
-      const res = await axios.post(
-        `/api/updatepassword`,
-        {
-          token,
-          epassword,
-          npassword,
-          cpassword
-        }
-      );
-      console.log(res)
-      if (res.data.success) {
-        toast.success(('Successfully Updated'), {
-          position: "top-left",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        })
-      }
+      
 
     } else {
       toast.error(('Password not matched, try again'), {
