@@ -7,14 +7,13 @@ var jwt = require('jsonwebtoken');
 
 const handler = async (req, res) => {
     if (req.method == 'POST') {
-        console.log(req.body)
         let user = await User.findOne({ email: req.body.email })
         if (user) {
             let encryptedPass = CryptoJS.AES.decrypt(user.password, 'secret123');
             let originalPass = encryptedPass.toString(CryptoJS.enc.Utf8);
 
             if (req.body.email == user.email && req.body.password == originalPass) {
-                var token = jwt.sign({ name: user.name, email: user.email }, 'jwtsecret', { expiresIn: '2d' });
+                var token = jwt.sign({ name: user.name, email: user.email }, 'jwtsecret', { expiresIn: '7d' });
 
                 res.status(200).json({ success: true, token })
 
@@ -25,7 +24,7 @@ const handler = async (req, res) => {
 
 
         } else {
-            res.status(200).json({ success: false, error: 'User Not Found' })
+            res.status(400).json({ success: false, error: 'User Not Found' })
         }
 
 

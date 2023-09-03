@@ -20,7 +20,6 @@ const Orders = () => {
       );
 
       setOrders(data.orders)
-      console.log(data)
 
     }
 

@@ -43,6 +43,9 @@ export default function App({ Component, pageProps }) {
     if(token){
       setUser({value: token})
       
+    }else{
+      setUser({value: null})
+
     }
 
     setKey(Math.random())

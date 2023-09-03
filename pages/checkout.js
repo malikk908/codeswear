@@ -23,7 +23,7 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
       async function fetchEmail() {
         const token = localStorage.getItem('token');
         const { data } = await axios.post(
-          `/api/getemail`,
+          `/api/getuser`,
           {
             token
           }
@@ -81,7 +81,7 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
       }
     }
 
-    if (name.length > 3 && email.length > 3 & address.length > 3 && phone.length > 3 && pincode.length > 1) {
+    if (name.length > 3 && email.length > 3 && address.length > 3 && phone.length > 3 && pincode.length > 1) {
       setDisabled(false)
     } else {
       setDisabled(true)
