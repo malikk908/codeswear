@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 var CryptoJS = require("crypto-js");
 
 
-
 const handler = async (req, res) => {
     const token = req.body.token;
     if (token) {
@@ -22,32 +21,24 @@ const handler = async (req, res) => {
                 let encryptedPass = CryptoJS.AES.decrypt(user.password, 'secret123');
                 let originalPass = encryptedPass.toString(CryptoJS.enc.Utf8);
 
-
                 if (req.body.epassword === originalPass) {
                     await User.findOneAndUpdate({ email: email }, { password: CryptoJS.AES.encrypt(req.body.npassword, 'secret123').toString() })
 
                     res.status(200).json({ success: true })
                 } else {
                     res.status(400).json({ success: false, error: 'Incorrect Password' })
-
                 }
 
             } else {
                 res.status(400).json({ success: false, error: 'User Not Found' })
             }
 
-
-
-
         } catch (error) {
             console.log(error)
             res.status(400).json({ error })
-
         }
-
     }
     return
-
 
 }
 

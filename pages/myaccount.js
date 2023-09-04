@@ -37,6 +37,7 @@ const MyAccount = () => {
           setAddress(address)
           setPhone(phone)
           setPincode(pincode)
+          getPincode(pincode)
 
         } catch (error) {
           console.log(error)
@@ -59,11 +60,17 @@ const MyAccount = () => {
 
   }, [])
 
-  // useEffect(() => {
-
-
-
-  // }, [handleSubmit])
+  const getPincode = async (pin) => {
+    let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+        let pinJson = await pins.json()
+        if (Object.keys(pinJson).includes(pin)) {
+          setCity(pinJson[pin][1])
+          setState(pinJson[pin][0])
+        } else {
+          setCity('')
+          setState('')
+        }
+  }
 
 
 

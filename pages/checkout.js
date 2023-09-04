@@ -15,11 +15,18 @@ const stripePromise = loadStripe(
 const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
 
   const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [address, setAddress] = useState('')
+  const [phone, setPhone] = useState('')
+  const [pincode, setPincode] = useState('')
+  const [city, setCity] = useState('')
+  const [state, setState] = useState('')
+  const [disabled, setDisabled] = useState(true)
 
 
   useEffect(() => {
 
-    if (user.value) {
+    if (localStorage.getItem('token')) {
       async function fetchEmail() {
         const token = localStorage.getItem('token');
         const { data } = await axios.post(
@@ -29,7 +36,18 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
           }
         );
         const email = data.email
+        const name = data.name
+        const address = data.address
+        const phone = data.phone
+        const pincode = data.pincode
+
         setEmail(email)
+        setName(name)
+        setAddress(address)
+        setPhone(phone)
+        setPincode(pincode)
+        getPincode(pincode)
+        setDisabled(false)
       }
 
       fetchEmail()
@@ -40,15 +58,18 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
 
   }, [])
 
+  const getPincode = async (pin) => {
+    let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+        let pinJson = await pins.json()
+        if (Object.keys(pinJson).includes(pin)) {
+          setCity(pinJson[pin][1])
+          setState(pinJson[pin][0])
+        } else {
+          setCity('')
+          setState('')
+        }
+  }
 
-
-  const [name, setName] = useState('')
-  const [address, setAddress] = useState('')
-  const [phone, setPhone] = useState('')
-  const [pincode, setPincode] = useState('')
-  const [city, setCity] = useState('')
-  const [state, setState] = useState('')
-  const [disabled, setDisabled] = useState(true)
 
   const handleChange = async (e) => {
     if (e.target.name == 'name') {
@@ -109,9 +130,9 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
 
     } catch (error) {
       console.log(error)
-      if(!error.response.data.dontClearCart){
+      if (!error.response.data.dontClearCart) {
         clearCartAfterCheckout()
-      }      
+      }
       toast.error(error.response.data.error, {
         position: "top-left",
         autoClose: 2000,
