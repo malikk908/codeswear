@@ -25,7 +25,7 @@ const Signup = () => {
 
     const data = { name, email, password }
     console.log(data)
-    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/signup`, {
+    let res = await fetch(`/api/signup`, {
       method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
