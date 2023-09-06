@@ -25,7 +25,7 @@ const login = () => {
     e.preventDefault()
 
     const data = { email, password }
-    let res = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/login`, {
+    let res = await fetch(`/api/login`, {
       method: "POST", // or 'PUT'
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const login = () => {
       setEmail('')
       setPassword('')
       setTimeout(() => {
-        router.push(process.env.NEXT_PUBLIC_HOST)
+        router.push('/')
       }, 1500);
 
     }else{

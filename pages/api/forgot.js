@@ -50,7 +50,7 @@ const handler = async (req, res) => {
             try {
                 let forgot = await Forgot.findOne({ token: token })
 
-                await User.findOneAndUpdate({ email: forgot.email }, { password: CryptoJS.AES.encrypt(password, 'secret123').toString() })
+                await User.findOneAndUpdate({ email: forgot.email }, { password: CryptoJS.AES.encrypt(password, process.env.CRYPTOJS_SECRET).toString() })
 
                 res.status(200).json({ success: true, message: 'Password updated successfully' })
 

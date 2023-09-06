@@ -59,7 +59,7 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
   }, [])
 
   const getPincode = async (pin) => {
-    let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+    let pins = await fetch(`/api/pincode`)
         let pinJson = await pins.json()
         if (Object.keys(pinJson).includes(pin)) {
           setCity(pinJson[pin][1])
@@ -87,7 +87,7 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
     else if (e.target.name == 'pincode') {
       setPincode(e.target.value)
       if (e.target.value.length == 6) {
-        let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+        let pins = await fetch(`/api/pincode`)
         let pinJson = await pins.json()
         if (Object.keys(pinJson).includes(e.target.value)) {
           setCity(pinJson[e.target.value][1])

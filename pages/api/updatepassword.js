@@ -18,11 +18,11 @@ const handler = async (req, res) => {
 
             if (user) {
 
-                let encryptedPass = CryptoJS.AES.decrypt(user.password, 'secret123');
+                let encryptedPass = CryptoJS.AES.decrypt(user.password, process.env.CRYPTOJS_SECRET);
                 let originalPass = encryptedPass.toString(CryptoJS.enc.Utf8);
 
                 if (req.body.epassword === originalPass) {
-                    await User.findOneAndUpdate({ email: email }, { password: CryptoJS.AES.encrypt(req.body.npassword, 'secret123').toString() })
+                    await User.findOneAndUpdate({ email: email }, { password: CryptoJS.AES.encrypt(req.body.npassword, process.env.CRYPTOJS_SECRET).toString() })
 
                     res.status(200).json({ success: true })
                 } else {

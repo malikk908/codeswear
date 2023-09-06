@@ -17,7 +17,7 @@ export default function Post({ addToCart, buyNow, product, variants, error }) {
   const [service, setService] = useState()
 
   const checkServiceability = async () => {
-    let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
+    let pins = await fetch(`/api/pincode`)
     let pinJson = await pins.json()
     if (pinJson.includes(parseInt(pin))) {
       setService(true)
@@ -49,7 +49,7 @@ export default function Post({ addToCart, buyNow, product, variants, error }) {
 
 
   const refreshVariant = (newsize, newcolor) => {
-    let url = `${process.env.NEXT_PUBLIC_HOST}/product/${variants[newcolor][newsize]['slug']}`
+    let url = `/product/${variants[newcolor][newsize]['slug']}`
     router.push(url);
   }
 

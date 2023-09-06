@@ -5,7 +5,6 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 
 
-
 const forgot = () => {
 
   const router = useRouter()
@@ -15,15 +14,6 @@ const forgot = () => {
       router.push('/')
     }
   }, [])
-
-  useEffect(()=>{
-    if(!router.isReady) return;
-
-    // codes using router.query
-    console.log(router.query)
-
-}, [router.isReady]);
-
 
 
   const [email, setEmail] = useState('')
@@ -56,7 +46,8 @@ const forgot = () => {
         }
       );
 
-      router.push(`/forgot?token=${data.token}`)
+      router.push(`/forgot?token=${data.token}`)  //since we dont have an email service running, we are pushing user directly the token url; in reality, user is supposed to come at this url through email
+
       toast.success('Password Reset instructions have been sent to your email')
 
     } catch (error) {
@@ -137,12 +128,7 @@ const forgot = () => {
             {password && password == cpassword &&
               <span className='text-green-600'>Password Matched</span>}
           </div>
-
           }
-
-
-
-
         </form>
 
         <p className="mt-10 text-center text-sm text-gray-500">
