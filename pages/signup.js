@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const signup = () => {
+const Signup = () => {
 
   const router = useRouter()
 
@@ -119,4 +119,4 @@ const signup = () => {
   )
 }
 
-export default signup
+export default Signup

@@ -12,7 +12,7 @@ const stripePromise = loadStripe(
 );
 
 
-const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
+const Checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
 
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
@@ -275,4 +275,4 @@ const checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
   )
 }
 
-export default checkout
+export default Checkout

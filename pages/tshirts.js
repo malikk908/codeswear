@@ -5,7 +5,7 @@ import Product from "@/models/Product"
 
 
 
-const tshirts = ({ products }) => {
+const Tshirts = ({ products }) => {
 
   return (
     <div>
@@ -87,4 +87,4 @@ export const getServerSideProps = async (context) => {
   }
 }
 
-export default tshirts
+export default Tshirts

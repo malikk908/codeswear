@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 
 
-const stickers = () => {
+const Stickers = () => {
   return (
     <div>
       <section className="text-gray-600 body-font">
@@ -148,4 +148,4 @@ const stickers = () => {
   )
 }
 
-export default stickers
+export default Stickers

@@ -5,7 +5,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 
 
-const forgot = () => {
+const Forgot = () => {
 
   const router = useRouter()
 
@@ -140,4 +140,4 @@ const forgot = () => {
   )
 }
 
-export default forgot
+export default Forgot
