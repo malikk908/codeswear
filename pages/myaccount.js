@@ -62,14 +62,14 @@ const MyAccount = () => {
 
   const getPincode = async (pin) => {
     let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
-        let pinJson = await pins.json()
-        if (Object.keys(pinJson).includes(pin)) {
-          setCity(pinJson[pin][1])
-          setState(pinJson[pin][0])
-        } else {
-          setCity('')
-          setState('')
-        }
+    let pinJson = await pins.json()
+    if (Object.keys(pinJson).includes(pin)) {
+      setCity(pinJson[pin][1])
+      setState(pinJson[pin][0])
+    } else {
+      setCity('')
+      setState('')
+    }
   }
 
 
@@ -88,7 +88,6 @@ const MyAccount = () => {
 
 
   const [disableDetailsButton, setDisableDetailsButton] = useState(true)
-  const [disablePasswordButton, setdisablePasswordButton] = useState(false)
 
 
   const handleChange = async (e) => {
@@ -133,13 +132,7 @@ const MyAccount = () => {
       setDisableDetailsButton(false)
     } else {
       setDisableDetailsButton(true)
-    }
-
-    // if (password.length > 1 && cpassword.length > 1) {
-    //   setdisablePasswordButton(false)
-    // } else {
-    //   setdisablePasswordButton(true)
-    // }
+    }   
 
   }
 
@@ -200,13 +193,13 @@ const MyAccount = () => {
 
       } catch (error) {
         console.log(error)
-          if (!error.response.data.success) {
-            
-            toast.error(error.response.data.error)
-          }
+        if (!error.response.data.success) {
+
+          toast.error(error.response.data.error)
+        }
 
       }
-      
+
 
     } else {
       toast.error(('Password not matched, try again'), {
@@ -306,7 +299,7 @@ const MyAccount = () => {
         <div className="px-2 w-1/2">
           <div className="relative mb-4">
             <label htmlFor="name" className="leading-7 text-sm text-gray-600">Existing Password</label>
-            <input onChange={handleChange} value={epassword} type="password" id="epassword" name="epassword" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input onChange={handleChange} value={epassword} type="password" id="epassword" name="epassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
 
         </div>
@@ -317,7 +310,7 @@ const MyAccount = () => {
         <div className="px-2 w-1/2">
           <div className="relative mb-4">
             <label htmlFor="state" className="leading-7 text-sm text-gray-600">New Password</label>
-            <input onChange={handleChange} value={npassword} type="password" id="npassword" name="npassword" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input onChange={handleChange} value={npassword} type="password" id="npassword" name="npassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
 
         </div>
@@ -328,7 +321,7 @@ const MyAccount = () => {
         <div className="px-2 w-1/2">
           <div className="relative mb-4">
             <label htmlFor="state" className="leading-7 text-sm text-gray-600">Confirm Password</label>
-            <input onChange={handleChange} value={cpassword} type="password" id="cpassword" name="cpassword" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            <input onChange={handleChange} value={cpassword} type="password" id="cpassword" name="cpassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
 
         </div>
@@ -336,7 +329,11 @@ const MyAccount = () => {
       </div>
 
 
-      <button disabled={disablePasswordButton} onClick={handlePasswordChange} className={`flex mr-2 text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none ${!disablePasswordButton ? `hover:bg-pink-600` : 'disabled:opacity-50'}  rounded text-sm`} type="submit" role="link"> Submit </button>
+      <button disabled={npassword != cpassword} onClick={handlePasswordChange} className={`flex mr-2 text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none ${npassword == cpassword ? `hover:bg-pink-600` : 'disabled:opacity-50'}  rounded text-sm`} type="submit" role="link"> Reset Password </button>
+      {cpassword && npassword != cpassword &&
+        <span className='text-red-600'>Password Not Matched</span>}
+      {npassword && npassword == cpassword &&
+        <span className='text-green-600'>Password Matched</span>}
 
     </div>
   )

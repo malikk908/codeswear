@@ -140,9 +140,6 @@ const mugs = () => {
                   <p className="mt-1">Rs 1099</p>
                 </div></Link>
             </div>
-
-
-
           </div>
         </div>
       </section>
