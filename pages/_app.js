@@ -139,7 +139,7 @@ export default function App({ Component, pageProps }) {
       />
   
 
-  {key && <Navbar logout={logout} user={user} key={key} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />}
+  {key && <Navbar logout={logout} user={user}  cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />}
 
   <LoadingBar
         color='#ff2d55'
