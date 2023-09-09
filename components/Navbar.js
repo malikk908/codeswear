@@ -93,7 +93,7 @@ const Navbar = ({ user, logout, cart, addToCart, removeFromCart, clearCart, subT
         </ol>
         <div className="flex mt-3">
 
-          <Link href={"/checkout"}><button disabled={Object.keys(cart).length == 0} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none ${ !Object.keys(cart).length == 0 &&  `hover:bg-pink-600` } rounded text-sm`}> <BsFillBagCheckFill className='m-1 mr-3' /> Checkout</button></Link>
+          <Link href={"/checkout"}><button onClick={()=>{setSidebar(false)}} disabled={Object.keys(cart).length == 0} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none ${ !Object.keys(cart).length == 0 &&  `hover:bg-pink-600` } rounded text-sm`}> <BsFillBagCheckFill className='m-1 mr-3' /> Checkout</button></Link>
           <button disabled={Object.keys(cart).length == 0} onClick={clearCart} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none ${ !Object.keys(cart).length == 0 && `hover:bg-pink-600` } rounded text-sm`}>Clear Cart</button>
 
         </div>
