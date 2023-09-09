@@ -2,43 +2,28 @@ const Menuitems = [
   {
     title: "Dashbaord",
     icon: "home",
-    href: "/",
+    href: "/admin",
   },
   {
-    title: "Buttons",
-    icon: "disc",
-    href: "/buttons",
+    title: "Add Product",
+    icon: "plus-circle",
+    href: "/admin/addproduct",
   },
   {
-    title: "Forms",
-    icon: "layout",
-    href: "/forms",
+    title: "View Products",
+    icon: "eye",
+    href: "/admin/viewproducts",
   },
   {
-    title: "Alerts",
-    icon: "info",
-    href: "/alerts",
+    title: "Orders",
+    icon: "shopping-cart",
+    href: "/admin/allorders",
   },
   {
-    title: "Ratings",
-    icon: "star",
-    href: "/rating",
-  },
-  {
-    title: "Images",
-    icon: "image",
-    href: "/image",
-  },
-  {
-    title: "Pagination",
-    icon: "user",
-    href: "/pagination",
-  },
-  {
-    title: "Tables",
-    icon: "grid",
-    href: "/table",
-  },
+    title: "Image Uploader",
+    icon: "upload",
+    href: "/admin/imageuploader",
+  }
 ];
 
 export default Menuitems;

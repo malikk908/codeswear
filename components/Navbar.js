@@ -29,16 +29,7 @@ const Navbar = ({ user, logout, cart, addToCart, removeFromCart, clearCart, subT
 
   const toggleCart = () => {
 
-    setSidebar(!sidebar)
-
-
-    // if (ref.current.classList.contains('translate-x-full')) {
-    //   ref.current.classList.remove('translate-x-full')
-    //   ref.current.classList.add('translate-x-0')
-    // } else if (!ref.current.classList.contains('translate-x-full')) {
-    //   ref.current.classList.remove('translate-x-0')
-    //   ref.current.classList.add('translate-x-full')
-    // }
+    setSidebar(!sidebar)   
 
   }
 
