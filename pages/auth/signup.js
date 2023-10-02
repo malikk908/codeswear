@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react'
+import Spinner from '@/components/Spinner';
 
 
 
@@ -23,14 +24,20 @@ const Signup = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    
+
     if (password.length == 0) {
       toast.error("Password is required")
     } else {
+
+      setLoading(true)
 
       const data = { name, email, password }
       let res = await fetch(`/api/signup`, {
@@ -55,11 +62,13 @@ const Signup = () => {
         if (res?.error == null) {
     
           toast.success('Your account has been created & you are logged in!')
-          router.push('/')         
+          router.push('/') 
+          setLoading(false)        
             
         } else {
     
           toast.error('Some Error Occured')
+          setLoading(false)
     
         }     
        
@@ -67,9 +76,11 @@ const Signup = () => {
       } else {
         if(response.error.code == 11000){
           toast.error('Email already exists, please Login to continue')
+          setLoading(false)
         }else{
           console.log(response)
           toast.error('Some Error Occured')
+          setLoading(false)
         }
         
       }
@@ -135,7 +146,10 @@ const Signup = () => {
           </div>
 
           <div>
-            <button type="submit" className="flex w-full justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600">Sign Up</button>
+            <button disabled={loading} type="submit" className="flex w-full justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 disabled:opacity-50">
+              Sign Up
+              {loading && <Spinner/>}
+              </button>
           </div>
         </form>
 
