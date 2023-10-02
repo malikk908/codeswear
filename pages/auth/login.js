@@ -57,9 +57,8 @@ const Login = ({ providers }) => {
       setLoginSuccess(true)
 
       toast.success('You have successfully logged in!')
-      setTimeout(() => {
-        router.push("/")
-      }, 800)      
+      router.push("/")
+         
 
     } else if (res?.error === 'customErrorToClient') {
 

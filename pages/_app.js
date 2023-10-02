@@ -122,7 +122,20 @@ export default function App({ Component, pageProps:{ session, ...pageProps} }) {
 
   <Head>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-  </Head> 
+  </Head>
+
+  <ToastContainer
+        position="bottom-center"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
   
 
   {key && <Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />}
