@@ -51,7 +51,6 @@ const Login = ({ providers }) => {
 
     if (res?.error == null) {
       
-      setLoading(false)
       toast.success('You have successfully logged in!')
       router.push('/')
 
