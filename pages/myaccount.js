@@ -4,9 +4,13 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 
+import { useSession } from 'next-auth/react'
 
 
 const MyAccount = () => {
+
+  const { data: session } = useSession()
+
 
   const router = useRouter()
 
@@ -15,18 +19,17 @@ const MyAccount = () => {
 
   useEffect(() => {
 
-    if (localStorage.getItem('token')) {
+    if (session.user) {
       async function fetchEmail() {
-        const token = localStorage.getItem('token');
+        const email = session.user.email;
         try {
           const { data } = await axios.post(
             `/api/getuser`,
             {
-              token
+              email
             }
           );
 
-          const email = data.email
           const name = data.name
           const address = data.address
           const phone = data.phone
@@ -41,12 +44,6 @@ const MyAccount = () => {
 
         } catch (error) {
           console.log(error)
-          if (error.response.data.error.name == 'TokenExpiredError') {
-            localStorage.removeItem('token')
-            router.push('/login')
-            toast.info('Your session has expired, please login to continue')
-          }
-
         }
 
       }
@@ -54,7 +51,7 @@ const MyAccount = () => {
       fetchEmail()
     }
     else {
-      router.push('/login')
+      router.push('/auth/login')
       toast.info('Please login to see your account details')
     }
 
@@ -132,91 +129,117 @@ const MyAccount = () => {
       setDisableDetailsButton(false)
     } else {
       setDisableDetailsButton(true)
-    }   
+    }
 
   }
 
   const handleSubmit = async () => {
-    const token = localStorage.getItem('token')
-    const res = await axios.post(
-      `/api/updateuser`,
-      {
-        token,
-        name,
-        address,
-        pincode,
-        phone
+    if (session.user) {
+
+      const email = session.user.email
+      const res = await axios.post(
+        `/api/updateuser`,
+        {
+          email,
+          name,
+          address,
+          pincode,
+          phone
+        }
+      );
+      console.log(res)
+      if (res.data.success) {
+        toast.success(('Successfully Updated'), {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        })
       }
-    );
-    console.log(res)
-    if (res.data.success) {
-      toast.success(('Successfully Updated'), {
-        position: "top-left",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
+
+    } else {
+      router.push('/auth/login')
+      toast.info('Session expired, please login to see your account details')
     }
+
 
   }
 
   const handlePasswordChange = async () => {
-    const token = localStorage.getItem('token')
-    if (npassword === cpassword) {
-      try {
-        const res = await axios.post(
-          `/api/updatepassword`,
-          {
-            token,
-            epassword,
-            npassword,
-            cpassword
+
+    if (session.user) {      
+
+      if (npassword === cpassword) {
+
+        if(npassword !== epassword){
+
+          try {
+            const email = session.user.email
+  
+            const res = await axios.post(
+              `/api/updatepassword`,
+              {
+                email,
+                epassword,
+                npassword,
+                cpassword
+              }
+            );
+            console.log(res)
+            if (res.data.success) {
+              toast.success(('Successfully Updated'), {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+              })
+  
+              setEpassword("")
+              setNpassword("")
+              setCpassword("")
+            }
+  
+          } catch (error) {
+            console.log(error)
+            if (!error.response.data.success) {
+  
+              toast.error(error.response.data.error)
+            }
           }
-        );
-        console.log(res)
-        if (res.data.success) {
-          toast.success(('Successfully Updated'), {
-            position: "top-left",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-          })
-        }
 
-      } catch (error) {
-        console.log(error)
-        if (!error.response.data.success) {
+        }else{
+          toast.error('New password cannot be old password')
 
-          toast.error(error.response.data.error)
-        }
+        }        
+
+
+      } else {
+        toast.error(('Password not matched, try again'), {
+          position: "top-left",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        })
+        return
 
       }
 
-
     } else {
-      toast.error(('Password not matched, try again'), {
-        position: "top-left",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      })
-      return
-
+      router.push('/auth/login')
+      toast.info('Session expired, please login to see your account details')
     }
-
-
 
   }
 
@@ -292,48 +315,51 @@ const MyAccount = () => {
 
       <button disabled={disableDetailsButton} onClick={handleSubmit} className={`flex mr-2 text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none ${!disableDetailsButton ? `hover:bg-pink-600` : 'disabled:opacity-50'}  rounded text-sm`} type="submit" role="link"> Submit </button>
 
-      <h2 className='font-semibold text-xl mt-4'>2. Change Password</h2>
+      {session?.user?.provider && <div>
 
+        <h2 className='font-semibold text-xl mt-4'>2. Change Password</h2>
 
-      <div className="mx-auto mt-5 flex">
-        <div className="px-2 w-1/2">
-          <div className="relative mb-4">
-            <label htmlFor="name" className="leading-7 text-sm text-gray-600">Existing Password</label>
-            <input onChange={handleChange} value={epassword} type="password" id="epassword" name="epassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+        <div className="mx-auto mt-5 flex">
+          <div className="px-2 w-1/2">
+            <div className="relative mb-4">
+              <label htmlFor="name" className="leading-7 text-sm text-gray-600">Existing Password</label>
+              <input onChange={handleChange} value={epassword} type="password" id="epassword" name="epassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            </div>
+
           </div>
 
         </div>
 
-      </div>
+        <div className="mx-auto mt-2 flex">
+          <div className="px-2 w-1/2">
+            <div className="relative mb-4">
+              <label htmlFor="state" className="leading-7 text-sm text-gray-600">New Password</label>
+              <input onChange={handleChange} value={npassword} type="password" id="npassword" name="npassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            </div>
 
-      <div className="mx-auto mt-2 flex">
-        <div className="px-2 w-1/2">
-          <div className="relative mb-4">
-            <label htmlFor="state" className="leading-7 text-sm text-gray-600">New Password</label>
-            <input onChange={handleChange} value={npassword} type="password" id="npassword" name="npassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
 
         </div>
 
-      </div>
+        <div className="mx-auto mt-2 flex">
+          <div className="px-2 w-1/2">
+            <div className="relative mb-4">
+              <label htmlFor="state" className="leading-7 text-sm text-gray-600">Confirm Password</label>
+              <input onChange={handleChange} value={cpassword} type="password" id="cpassword" name="cpassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
+            </div>
 
-      <div className="mx-auto mt-2 flex">
-        <div className="px-2 w-1/2">
-          <div className="relative mb-4">
-            <label htmlFor="state" className="leading-7 text-sm text-gray-600">Confirm Password</label>
-            <input onChange={handleChange} value={cpassword} type="password" id="cpassword" name="cpassword" required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
           </div>
 
         </div>
 
-      </div>
 
+        <button disabled={npassword != cpassword} onClick={handlePasswordChange} className={`flex mr-2 text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none ${npassword == cpassword ? `hover:bg-pink-600` : 'disabled:opacity-50'}  rounded text-sm`} type="submit" role="link"> Reset Password </button>
+        {cpassword && npassword != cpassword &&
+          <span className='text-red-600'>Password Not Matched</span>}
+        {npassword && npassword == cpassword &&
+          <span className='text-green-600'>Password Matched</span>}
 
-      <button disabled={npassword != cpassword} onClick={handlePasswordChange} className={`flex mr-2 text-white bg-pink-500 border-0 py-2 px-2 focus:outline-none ${npassword == cpassword ? `hover:bg-pink-600` : 'disabled:opacity-50'}  rounded text-sm`} type="submit" role="link"> Reset Password </button>
-      {cpassword && npassword != cpassword &&
-        <span className='text-red-600'>Password Not Matched</span>}
-      {npassword && npassword == cpassword &&
-        <span className='text-green-600'>Password Matched</span>}
+      </div>}
 
     </div>
   )

@@ -2,17 +2,13 @@
 // import connectDb from "@/middleware/mongoose"
 import User from "@/models/User"
 import connectDb from "@/middleware/mongoose"
-import jwt from "jsonwebtoken";
 var CryptoJS = require("crypto-js");
 
 
 const handler = async (req, res) => {
-    const token = req.body.token;
-    if (token) {
-        try {
-
-            const data = jwt.verify(token, process.env.JWT_SECRET)
-            let email = data.email
+    const email = req.body.email;
+    
+        try {          
 
             let user = await User.findOne({ email: email })
 
@@ -37,8 +33,8 @@ const handler = async (req, res) => {
             console.log(error)
             res.status(400).json({ error })
         }
-    }
-    return
+    
+    
 
 }
 

@@ -6,19 +6,26 @@ import { MdAccountCircle } from 'react-icons/md';
 
 import { useRef } from 'react';
 import { useRouter } from 'next/router';
+import { useSession, signIn, signOut } from 'next-auth/react'
+import { toast } from 'react-toastify';
 
 
 
-const Navbar = ({ user, logout, cart, addToCart, removeFromCart, clearCart, subTotal }) => {
+const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
+
 
   const [dropdown, setDropdown] = useState(false)
   const [sidebar, setSidebar] = useState(false)
   const router = useRouter()
 
+  const { data: session } = useSession()
+
+
+
   useEffect(() => {
     Object.keys(cart).length !== 0 && setSidebar(true)
     let exempted = ['/checkout', '/order', '/orders', '/myaccount']
-    if(exempted.includes(router.pathname)){
+    if (exempted.includes(router.pathname)) {
       setSidebar(false)
     }
   }, [Object.keys(cart).length])
@@ -29,14 +36,22 @@ const Navbar = ({ user, logout, cart, addToCart, removeFromCart, clearCart, subT
 
   const toggleCart = () => {
 
-    setSidebar(!sidebar)   
+    setSidebar(!sidebar)
 
+  }
+
+  const handleLogout = async ()=>{
+
+    const data = await signOut({redirect: false, callbackUrl: "/"})
+    router.push(data.url)
+    toast.success('You have successfully logged out!')
+    
   }
 
 
   return (
     <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white'>
-      
+
       <div className="logo mr-auto md:mx-5">
         <Link href={"/"}><img src="/logo2.png" alt="" /></Link>
       </div>
@@ -49,13 +64,13 @@ const Navbar = ({ user, logout, cart, addToCart, removeFromCart, clearCart, subT
         </ul>
       </div>
       <div className="cart absolute right-0 top-2 mx-5 mt-2 font-bold flex ">
-        {!user.value && <Link href={'/login'}><button className='mx-2 bg-pink-600 rounded text-sm text-white p-2'>Login</button></Link>}
-        <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{user.value && <MdAccountCircle className='mx-2 text-xl md:text-3xl' />}
+        {!session && <button onClick={() => { signIn() }} className='mx-2 bg-pink-600 rounded text-sm text-white p-2'>Login</button>}
+        <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{session && <MdAccountCircle className='mx-2 text-xl md:text-3xl' />}
           {dropdown && <div className='absolute right-8 bg-pink-300 top-7 py-4 rounded-md px-5 w-36'>
             <ul>
               <Link href={"/myaccount"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>My Account</li></Link>
               <Link href={"/orders"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Orders</li></Link>
-              <li onClick={logout} className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Logout</li>
+              <li onClick={handleLogout} className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Logout</li>
             </ul>
           </div>}</span>
 
@@ -84,8 +99,8 @@ const Navbar = ({ user, logout, cart, addToCart, removeFromCart, clearCart, subT
         </ol>
         <div className="flex mt-3">
 
-          <Link href={"/checkout"}><button onClick={()=>{setSidebar(false)}} disabled={Object.keys(cart).length == 0} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none ${ !Object.keys(cart).length == 0 &&  `hover:bg-pink-600` } rounded text-sm`}> <BsFillBagCheckFill className='m-1 mr-3' /> Checkout</button></Link>
-          <button disabled={Object.keys(cart).length == 0} onClick={clearCart} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none ${ !Object.keys(cart).length == 0 && `hover:bg-pink-600` } rounded text-sm`}>Clear Cart</button>
+          <Link href={"/checkout"}><button onClick={() => { setSidebar(false) }} disabled={Object.keys(cart).length == 0} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none ${!Object.keys(cart).length == 0 && `hover:bg-pink-600`} rounded text-sm`}> <BsFillBagCheckFill className='m-1 mr-3' /> Checkout</button></Link>
+          <button disabled={Object.keys(cart).length == 0} onClick={clearCart} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none ${!Object.keys(cart).length == 0 && `hover:bg-pink-600`} rounded text-sm`}>Clear Cart</button>
 
         </div>
 

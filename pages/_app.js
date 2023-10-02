@@ -1,6 +1,7 @@
 import Footer from '@/components/Footer'
 import Navbar from '@/components/Navbar'
 import '@/styles/globals.css'
+import { SessionProvider } from 'next-auth/react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
@@ -10,7 +11,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import LoadingBar from 'react-top-loading-bar'
 
 
-export default function App({ Component, pageProps }) {
+
+
+export default function App({ Component, pageProps:{ session, ...pageProps} }) {
 
   const [progress, setProgress] = useState(0)
 
@@ -20,6 +23,8 @@ export default function App({ Component, pageProps }) {
   const [key, setKey] = useState()
 
   const router = useRouter()
+
+
 
 
   useEffect(()=>{
@@ -120,6 +125,7 @@ export default function App({ Component, pageProps }) {
 
 
   return <>
+  <SessionProvider session={session}>
 
   <Head>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
@@ -152,6 +158,7 @@ export default function App({ Component, pageProps }) {
   <Component user={user} cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />
   
   <Footer/>
+  </SessionProvider>
 
   </>
 }

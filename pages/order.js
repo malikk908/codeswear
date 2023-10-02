@@ -1,9 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import mongoose from "mongoose";
 import Order from '@/models/Order';
 
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router';
+
+
+
 
 const MyOrder = ({order}) => {
+
+  const { data: session } = useSession()
+  const router = useRouter();
+
+
+  useEffect(()=>{
+    if (!session) {
+      router.push('/auth/login')
+    }
+    
+  }, [session])
+
   const {orderId, paymentInfo, orderItems} = order
   
 

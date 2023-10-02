@@ -3,17 +3,20 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react' 
 
 
 const Forgot = () => {
 
+  const { data: session } = useSession()
+
   const router = useRouter()
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
+    if (session) {
       router.push('/')
     }
-  }, [])
+  }, [session])
 
 
   const [email, setEmail] = useState('')
@@ -133,7 +136,7 @@ const Forgot = () => {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           <span className='mx-2'>Or</span>
-          <Link href="/login" className="font-semibold leading-6 text-pink-600 hover:text-pink-500">Login</Link>
+          <Link href="/auth/login" className="font-semibold leading-6 text-pink-600 hover:text-pink-500">Login</Link>
         </p>
       </div>
     </div>

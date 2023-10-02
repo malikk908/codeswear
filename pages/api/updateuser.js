@@ -2,15 +2,12 @@
 // import connectDb from "@/middleware/mongoose"
 import User from "@/models/User"
 import connectDb from "@/middleware/mongoose"
-import jwt from "jsonwebtoken";
 
 
 const handler = async (req, res) => {
-    const token = req.body.token;
-    if(token){
-        try {
-            const data = jwt.verify(token, process.env.JWT_SECRET)
-            let email = data.email
+    const email = req.body.email;
+    
+        try {           
 
             let user = await User.findOneAndUpdate({email: email}, {name: req.body.name, address: req.body.address, pincode: req.body.pincode, phone: req.body.phone})                
 
@@ -23,7 +20,7 @@ const handler = async (req, res) => {
             
         } 
 
-    }
+    
     return   
    
 

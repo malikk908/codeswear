@@ -3,7 +3,13 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
+import { useSession } from 'next-auth/react'
+
+
+
 const Orders = () => {
+
+  const { data: session } = useSession()
 
   const router = useRouter();
 
@@ -12,19 +18,20 @@ const Orders = () => {
 
   useEffect(() => {
     const fetchOrders = async () => {
+      const email = session.user.email
       const { data } = await axios.post(
         `/api/myorders`,
         {
-          token: localStorage.getItem('token')
+          email
         }
       );
-
+      
       setOrders(data.orders)
 
     }
 
-    if (!localStorage.getItem('token')) {
-      router.push('/login')
+    if (!session) {
+      router.push('/auth/login')
     }
     else {
       fetchOrders()

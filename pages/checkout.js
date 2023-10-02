@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { loadStripe } from '@stripe/stripe-js';
 
+import { useSession } from 'next-auth/react'
+
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
@@ -13,6 +15,9 @@ const stripePromise = loadStripe(
 
 
 const Checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
+
+  const { data: session } = useSession()
+
 
   const [email, setEmail] = useState('')
   const [name, setName] = useState('')
@@ -26,16 +31,15 @@ const Checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
 
   useEffect(() => {
 
-    if (localStorage.getItem('token')) {
+    if (session) {
       async function fetchEmail() {
-        const token = localStorage.getItem('token');
+        const email = session.user.email;
         const { data } = await axios.post(
           `/api/getuser`,
           {
-            token
+            email
           }
         );
-        const email = data.email
         const name = data.name
         const address = data.address
         const phone = data.phone

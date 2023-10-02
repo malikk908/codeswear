@@ -3,54 +3,69 @@ import Link from 'next/link'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
+import { signIn, getProviders } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 
 
-const Login = () => {
+const Login = ({ providers }) => {
+
+  delete providers.credentials
+
+
+  const { data: session } = useSession()
+
 
   const router = useRouter()
 
+
   useEffect(() => {
-    if(localStorage.getItem('token')){
-      router.push('/')
+    if (session) {
+      toast.success("You have successfully logged in!")
+      setTimeout(()=>{
+        router.push("/")
+      }, 800)
     }
-  }, [])
-  
+    
+  }, [session])
+
 
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  
 
-  const handleSubmit = async (e)=>{
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const data = { email, password }
-    let res = await fetch(`/api/login`, {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
+    const res = await signIn("credentials", {
+      email: email,
+      password: password,
+      redirect: false,
     })
 
-    let response = await res.json()
 
-    if(response.success){
-      localStorage.setItem('token', response.token)
-      toast.success('Your have successfully logged in!')
-      setEmail('')
-      setPassword('')
-      setTimeout(() => {
-        router.push('/')
-      }, 1500);
+    if (res?.error == null) {
 
-    }else{
-      toast.error(response.error)
+      toast.success('You have successfully logged in!')
+      router.push('/')
+      
+    } else if (res?.error === 'customErrorToClient') {
+
+      toast.error('Invalid Credentials')
+
+    } else {
+
+      toast.error('Some Error Occured')
 
     }
 
   }
-  
+
+  const handleGoogle = async ()=>{
+    await signIn("google")    
+      
+  }
+
 
   const handleChange = (e) => {
 
@@ -96,7 +111,7 @@ const Login = () => {
             <div className="flex items-center justify-between">
               <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">Password</label>
               <div className="text-sm">
-                <Link href="/forgot" className="font-semibold text-pink-600 hover:text-pink-500">Forgot password?</Link>
+                <Link href="/auth/forgot" className="font-semibold text-pink-600 hover:text-pink-500">Forgot password?</Link>
               </div>
             </div>
             <div className="mt-2">
@@ -109,13 +124,37 @@ const Login = () => {
           </div>
         </form>
 
-        <p className="mt-10 text-center text-sm text-gray-500">
+        <p className="mt-7 text-center text-sm text-gray-500">
           <span className='mx-2'>Not a member?</span>
-          <Link href="/signup" className="font-semibold leading-6 text-pink-600 hover:text-pink-500">Sign Up</Link>
+          <Link href="/auth/signup" className="font-semibold leading-6 text-pink-600 hover:text-pink-500">Sign Up</Link>
         </p>
+        <hr className=' m-7' />
+        {providers &&
+          Object.values(providers).map(provider => (
+            <button key={provider.name} onClick={handleGoogle} className="flex w-full justify-center rounded-md bg-transparent px-3 py-1.5 text-sm font-semibold leading-6 border border-pink-600 text-pink-600 shadow-sm hover:bg-pink-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 ">
+
+              Sign in with{' '} {provider.name}
+
+            </button>
+          ))}
+
+
       </div>
+
     </div>
   )
 }
 
 export default Login
+
+
+export async function getServerSideProps() {
+  const providers = await getProviders()
+
+
+  return {
+    props: {
+      providers
+    },
+  }
+}

@@ -3,16 +3,22 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react'
+
+
 
 const Signup = () => {
+
+  const { data: session } = useSession()
 
   const router = useRouter()
 
   useEffect(() => {
-    if(localStorage.getItem('token')){
+    if (session) {
       router.push('/')
     }
-  }, [])
+  }, [session])
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -22,28 +28,51 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    const data = { name, email, password }
-    console.log(data)
-    let res = await fetch(`/api/signup`, {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-
-    let response = await res.json()
-    console.log(response)
-
-    if (response.success) {
-      toast.success('Your account has been created!')
-      setName('')
-      setEmail('')
-      setPassword('')
-
+    if (password.length == 0) {
+      toast.error("Password is required")
     } else {
-      toast.error(response.error)
+
+      const data = { name, email, password }
+      let res = await fetch(`/api/signup`, {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      let response = await res.json()
+
+      if (response.success) {
+
+        const res = await signIn("credentials", {
+          email: email,
+          password: password,
+          redirect: false,
+        })
+    
+    
+        if (res?.error == null) {
+    
+          toast.success('Your account has been created & you are logged in!')
+          router.push('/')         
+            
+        } else {
+    
+          toast.error('Some Error Occured')
+    
+        }     
+       
+
+      } else {
+        if(response.error.code == 11000){
+          toast.error('Email already exists, please Login to continue')
+        }else{
+          console.log(response)
+          toast.error('Some Error Occured')
+        }
+        
+      }
     }
   }
 
@@ -112,7 +141,7 @@ const Signup = () => {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           <span className='mx-2'>Already a member?</span>
-          <Link href="/login" className="font-semibold leading-6 text-pink-600 hover:text-pink-500">Login</Link>
+          <Link href="/auth/login" className="font-semibold leading-6 text-pink-600 hover:text-pink-500">Login</Link>
         </p>
       </div>
     </div>

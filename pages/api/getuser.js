@@ -2,31 +2,27 @@
 // import connectDb from "@/middleware/mongoose"
 import User from "@/models/User"
 import connectDb from "@/middleware/mongoose"
-import jwt from "jsonwebtoken";
 
 
 const handler = async (req, res) => {
-    const token = req.body.token;
-    if(token){
-        try {
-            const data = jwt.verify(token, process.env.JWT_SECRET)
-            let email = data.email
+    const email = req.body.email;
+    
+        try {            
 
             let user = await User.findOne({email: email})
 
             const {name, address, phone, pincode} = user
             
 
-            res.status(200).json({ name, email, address, phone, pincode })
+            res.status(200).json({ name, address, phone, pincode })
     
         } catch (error) {
             console.log(error)
             res.status(400).json({ error })
             
-        } 
-
-    }
-    return   
+        }      
+  
+       
    
 
 }
