@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react'
 import Spinner from '@/components/Spinner';
+import Checkmark from '@/components/Checkmark';
 
 
 
