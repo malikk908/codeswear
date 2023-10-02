@@ -19,7 +19,6 @@ export default function App({ Component, pageProps:{ session, ...pageProps} }) {
 
   const [cart, setCart] = useState({})
   const[subTotal, setSubTotal] = useState(0)
-  const [user, setUser] = useState({value: null})
   const [key, setKey] = useState()
 
   const router = useRouter()
@@ -43,27 +42,12 @@ export default function App({ Component, pageProps:{ session, ...pageProps} }) {
       console.error(error)
       localStorage.clear()
     }
-
-    const token = localStorage.getItem('token')
-    if(token){
-      setUser({value: token})
-      
-    }else{
-      setUser({value: null})
-
-    }
+    
 
     setKey(Math.random())
     
   }, [router.query])
-
-  const logout = ()=>{
-    localStorage.removeItem('token')    
-    setUser({value:null})
-    setKey(Math.random())
-    toast.success('You have been logged out successfully!')
-    router.push('/')
-  }
+  
 
 
   const saveCart = (myCart)=>{
@@ -115,7 +99,16 @@ export default function App({ Component, pageProps:{ session, ...pageProps} }) {
   const clearCart = ()=>{
     setCart({})
     saveCart({})
-    toast.info('Your cart has been cleared!')
+    toast.info('Your cart has been cleared!', {
+      position: "bottom-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        newestOnTop: false,
+        closeOnClick: true,
+        pauseOnFocusLoss: true,
+        draggable: true,
+        theme: "light"
+    })
   }
 
   const clearCartAfterCheckout = ()=>{
@@ -129,23 +122,10 @@ export default function App({ Component, pageProps:{ session, ...pageProps} }) {
 
   <Head>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-  </Head>
-
-  <ToastContainer
-        position="bottom-center"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+  </Head> 
   
 
-  {key && <Navbar logout={logout} user={user}  cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />}
+  {key && <Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />}
 
   <LoadingBar
         color='#ff2d55'
@@ -155,7 +135,7 @@ export default function App({ Component, pageProps:{ session, ...pageProps} }) {
         onLoaderFinished={() => setProgress(0)}
       />
   
-  <Component user={user} cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />
+  <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />
   
   <Footer/>
   </SessionProvider>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { signIn, getProviders } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
 import Spinner from '@/components/Spinner';
+import Checkmark from '@/components/Checkmark';
 
 
 const Login = ({ providers }) => {
@@ -34,6 +35,7 @@ const Login = ({ providers }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loginSuccess, setLoginSuccess] = useState(false)
 
 
 
@@ -50,7 +52,10 @@ const Login = ({ providers }) => {
 
 
     if (res?.error == null) {
-      
+
+      setLoading(false)
+      setLoginSuccess(true)
+
       toast.success('You have successfully logged in!')
       router.push('/')
 
@@ -89,7 +94,7 @@ const Login = ({ providers }) => {
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <ToastContainer
-        position="bottom-center"
+        position="top-right"
         autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -127,9 +132,13 @@ const Login = ({ providers }) => {
           </div>
 
           <div>
-            <button disabled={loading} type="submit" className="flex w-full justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 disabled:opacity-50">
+            <button disabled={loading || loginSuccess} type="submit" className="flex w-full justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 disabled:opacity-50">
               Login
-              {loading && <Spinner/>}
+              {loading && <Spinner />}
+              
+              {loginSuccess && <Checkmark/>}
+              
+              
             </button>
           </div>
         </form>

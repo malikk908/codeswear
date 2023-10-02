@@ -14,7 +14,7 @@ const stripePromise = loadStripe(
 );
 
 
-const Checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
+const Checkout = ({ cart, addToCart, removeFromCart, clearCartAfterCheckout, subTotal }) => {
 
   const { data: session } = useSession()
 
@@ -179,8 +179,8 @@ const Checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
         <div className="px-2 w-1/2">
           <div className="relative mb-4">
             <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
-            {user.value ? <input readOnly value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" /> : <input onChange={handleChange} value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />}
-
+            <input ${...(session?.user ? {readOnly:true} : {onChange: handleChange})} value={email} type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />          
+            
           </div>
 
         </div>
@@ -254,13 +254,7 @@ const Checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
 
 
       </div>
-
-      {/* <div className="flex mt-3 mx-4">
-
-        <button> <BsFillBagCheckFill className='m-1 mr-3' /> Pay Rs.{subTotal} </button>
-
-
-      </div> */}
+      
 
 
       <section>
@@ -268,12 +262,6 @@ const Checkout = ({ user, cart, addToCart, removeFromCart, clearCartAfterCheckou
           Pay Rs.{subTotal}
         </button>
       </section>
-
-
-
-
-
-
 
     </div>
   )

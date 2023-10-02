@@ -25,13 +25,15 @@ const Signup = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loginSuccess, setLoginSuccess] = useState(false)
+
 
 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    
+
 
     if (password.length == 0) {
       toast.error("Password is required")
@@ -57,32 +59,34 @@ const Signup = () => {
           password: password,
           redirect: false,
         })
-    
-    
+
+
         if (res?.error == null) {
-    
+
+          setLoading(false)
+          setLoginSuccess(true)
+
           toast.success('Your account has been created & you are logged in!')
-          router.push('/') 
-          setLoading(false)        
-            
+          router.push('/')
+
         } else {
-    
+
           toast.error('Some Error Occured')
           setLoading(false)
-    
-        }     
-       
+
+        }
+
 
       } else {
-        if(response.error.code == 11000){
+        if (response.error.code == 11000) {
           toast.error('Email already exists, please Login to continue')
           setLoading(false)
-        }else{
+        } else {
           console.log(response)
           toast.error('Some Error Occured')
           setLoading(false)
         }
-        
+
       }
     }
   }
@@ -104,7 +108,7 @@ const Signup = () => {
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <ToastContainer
-        position="bottom-center"
+        position="top-right"
         autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -146,10 +150,12 @@ const Signup = () => {
           </div>
 
           <div>
-            <button disabled={loading} type="submit" className="flex w-full justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 disabled:opacity-50">
-              Sign Up
-              {loading && <Spinner/>}
-              </button>
+            <button disabled={loading || loginSuccess} type="submit" className="flex w-full justify-center rounded-md bg-pink-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-pink-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 disabled:opacity-50">
+              Sign Up              
+              {loading && <Spinner />}
+
+              {loginSuccess && <Checkmark/>}
+            </button>
           </div>
         </form>
 
