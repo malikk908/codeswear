@@ -67,7 +67,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
       </div>
       <div className="cart absolute right-0 top-2 mx-5 mt-2 font-bold flex ">
         {!session && <button onClick={() => { signIn() }} className='mx-2 bg-pink-600 rounded text-sm text-white p-2'>Login</button>}
-        <span onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{session && <MdAccountCircle className='mx-2 text-xl md:text-3xl' />}
+        <span onClick={()=>{setDropdown(!dropdown)}} onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{session && <MdAccountCircle className='mx-2 text-xl md:text-3xl' />}
           {dropdown && <div className='absolute right-8 bg-pink-300 top-7 py-4 rounded-md px-5 w-36'>
             <ul>
               <Link href={"/myaccount"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>My Account</li></Link>

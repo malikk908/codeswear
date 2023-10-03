@@ -3,14 +3,17 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { signIn } from 'next-auth/react';
+import { signIn, getProviders } from 'next-auth/react';
 import { useSession } from 'next-auth/react'
 import Spinner from '@/components/Spinner';
 import Checkmark from '@/components/Checkmark';
+import Image from 'next/image';
 
 
 
-const Signup = () => {
+const Signup = ({providers}) => {
+
+  delete providers.credentials
 
   const { data: session } = useSession()
 
@@ -27,14 +30,11 @@ const Signup = () => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [loginSuccess, setLoginSuccess] = useState(false)
-
-
+  const [googleLoading, setGoogleLoading] = useState(false)
 
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-
 
     if (password.length == 0) {
       toast.error("Password is required")
@@ -91,6 +91,12 @@ const Signup = () => {
       }
     }
   }
+
+  const handleGoogle = async () => {
+    setGoogleLoading(true)
+    await signIn("google")
+  }
+
 
   const handleChange = (e) => {
     if (e.target.name == 'name') {
@@ -164,9 +170,44 @@ const Signup = () => {
           <span className='mx-2'>Already a member?</span>
           <Link href="/auth/login" className="font-semibold leading-6 text-pink-600 hover:text-pink-500">Login</Link>
         </p>
+        <div className="flex items-center my-5">
+          <div className="flex-grow bg bg-gray-300 h-0.5"></div>
+          <div className="flex-grow-0 mx-5 text-gray-500">or</div>
+          <div className="flex-grow bg bg-gray-300 h-0.5"></div>
+        </div>
+        {providers &&
+          Object.values(providers).map(provider => (
+            <button disabled={googleLoading} key={provider.name} onClick={handleGoogle} className="flex items-center w-full rounded-md bg-transparent px-3 py-1.5 text-sm font-semibold leading-6 border border-pink-600 text-pink-600 shadow-sm hover:bg-pink-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink-600 disabled:opacity-50">
+
+              <div className="ml-4">
+                <Image width={21} height={21} src='/googleLogo.png' alt='googleLogo' />
+              </div>
+
+              <div className="mx-auto flex items-center">
+                Sign Up with{' '} {provider.name}
+
+                {googleLoading && <Spinner />}
+              </div>
+
+              <div className='w-7 h7'>
+              </div>
+
+            </button>
+          ))}
       </div>
     </div>
   )
 }
 
 export default Signup
+
+export async function getServerSideProps() {
+  const providers = await getProviders()
+
+
+  return {
+    props: {
+      providers
+    },
+  }
+}
