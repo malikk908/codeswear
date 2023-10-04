@@ -99,16 +99,7 @@ export default function App({ Component, pageProps:{ session, ...pageProps} }) {
   const clearCart = ()=>{
     setCart({})
     saveCart({})
-    toast.info('Your cart has been cleared!', {
-      position: "bottom-center",
-        autoClose: 1000,
-        hideProgressBar: false,
-        newestOnTop: false,
-        closeOnClick: true,
-        pauseOnFocusLoss: true,
-        draggable: true,
-        theme: "light"
-    })
+    toast.info('Your cart has been cleared!')
   }
 
   const clearCartAfterCheckout = ()=>{

@@ -14,19 +14,19 @@ const Login = ({ providers }) => {
 
   delete providers.credentials
 
-
   const { data: session } = useSession()
-
 
   const router = useRouter()
 
 
   useEffect(() => {
     if (session) {
-      toast.success("You have successfully logged in!")
-      setTimeout(() => {
-        router.push("/")
-      }, 800)
+      if (session.user.provider === 'google') {
+        toast.success("You have successfully logged in!")
+        setTimeout(() => {
+          router.push("/")
+        }, 500)
+      }
     }
 
   }, [session])
@@ -58,8 +58,11 @@ const Login = ({ providers }) => {
       setLoading(false)
       setLoginSuccess(true)
 
-      toast.success('You have successfully logged in!')
       router.push("/")
+      toast.success('You have successfully logged in!')
+
+
+
 
 
     } else if (res?.error === 'customErrorToClient') {
@@ -97,18 +100,7 @@ const Login = ({ providers }) => {
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img className="mx-auto h-20 w-auto" src="/logo1.png" alt="Your Company" />
         <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>

@@ -90,6 +90,7 @@ export default NextAuth({
           const userExist = await User.findOne({email: profile.email})
           if(userExist){
             user.role = userExist.role
+            user.provider = 'google'
             
           }          
 
@@ -97,7 +98,8 @@ export default NextAuth({
 
             let u = new User( {name: profile.name, email: profile.email, image: profile.picture } )
             await u.save()
-            user.role = u.role            
+            user.role = u.role
+            user.provider = 'google'          
 
           }
 
