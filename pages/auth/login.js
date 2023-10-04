@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 import { signIn, getProviders } from 'next-auth/react'
@@ -26,6 +26,8 @@ const Login = ({ providers }) => {
         setTimeout(() => {
           router.push("/")
         }, 500)
+      }else{
+        router.push("/")
       }
     }
 

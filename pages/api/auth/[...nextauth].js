@@ -78,7 +78,7 @@ export default NextAuth({
       return session;
     },
 
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, account, profile }) {
       //to handle errors for credentials sign-in      
       if(account.provider ==='credentials' && user?.error === 'customError') {
          throw new Error('customErrorToClient')

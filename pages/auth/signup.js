@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { signIn, getProviders } from 'next-auth/react';
 import { useSession } from 'next-auth/react'
@@ -21,7 +21,14 @@ const Signup = ({providers}) => {
 
   useEffect(() => {
     if (session) {
-      router.push('/')
+      if (session.user.provider === 'google') {
+        toast.success("You have successfully logged in!")
+        setTimeout(() => {
+          router.push("/")
+        }, 500)
+      }else{
+        router.push("/")
+      }
     }
   }, [session])
 
@@ -67,8 +74,9 @@ const Signup = ({providers}) => {
           setLoading(false)
           setLoginSuccess(true)
 
-          toast.success('Your account has been created & you are logged in!')
           router.push('/')
+          toast.success('Your account has been created & you are logged in!')
+          
 
         } else {
 
@@ -114,18 +122,7 @@ const Signup = ({providers}) => {
 
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+      
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img className="mx-auto h-20 w-auto" src="/logo1.png" alt="Your Company" />
         <h2 className="mt-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign up for an account</h2>
