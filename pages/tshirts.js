@@ -17,8 +17,8 @@ const Tshirts = ({ products }) => {
             {Object.keys(products).map((item) => {
 
               return (
-                <div className="lg:w-1/4 md:w-1/2 p-4 w-full shadow-lg">
-                  <Link key={products[item]._id} passHref={true} href={`/product/${products[item].slug}`} >
+                <div key={products[item]._id} className="lg:w-1/4 md:w-1/2 p-4 w-full shadow-lg">
+                  <Link passHref={true} href={`/product/${products[item].slug}`} >
                     <div className="block relative rounded overflow-hidden">
                       <img alt="ecommerce" className="h-[36vh] md:h-[42vh] block m-auto" src={products[item].img} />
                     </div>
