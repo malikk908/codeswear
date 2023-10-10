@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 import Product from "@/models/Product"
 import FilterSection from '@/components/Filter/FilterSection';
 import { BsFilterLeft } from 'react-icons/bs';
-import { AiOutlineCloseCircle } from 'react-icons/ai';
+import { AiOutlineClear, AiOutlineClose, AiOutlineCloseCircle } from 'react-icons/ai';
+import {IoIosClose} from 'react-icons/io'
 
 
 
@@ -139,14 +140,24 @@ const Tshirts = ({ products }) => {
 
           <div className="container px-5 py-7 mx-auto">
             <h1 className='text-3xl font-extrabold mb-3'>Tshirts</h1>
-            <div className='mb-3'>
+            <div className='md:hidden mb-3'>
               <button
-                className='md:hidden flex items-center justify-between p-1 w-auto bg-white text-black ;'
+                className='flex items-center justify-between p-1 w-auto bg-white text-black ;'
                 onClick={() => setShowSidebar(true)}
               >
                 <BsFilterLeft className='mr-2 text-2xl' />
                 <span className=''>Apply Filters</span>
               </button>
+
+              {filteredProducts.length < productsArray.length && <button
+                className='flex items-center justify-between w-auto bg-transparent text-black border rounded-full border-zinc-300 px-2 my-1'
+                onClick={clearFilters}
+                
+              >                
+                <span className='text-xs'>Clear</span>
+                <IoIosClose className='ml-1 w-4 h-4'/>
+              </button>}
+
 
             </div>
 
