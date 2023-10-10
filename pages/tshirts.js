@@ -3,6 +3,8 @@ import Link from 'next/link'
 import mongoose from "mongoose";
 import Product from "@/models/Product"
 import FilterSection from '@/components/Filter/FilterSection';
+import { BsFilterLeft } from 'react-icons/bs';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 
 
@@ -11,11 +13,13 @@ const Tshirts = ({ products }) => {
   const productsArray = Object.values(products);
 
   const [priceRange, setPriceRange] = useState([600, 2000]);
+  const [showSidebar, setShowSidebar] = useState(false);
+
 
 
   const [selectedFilters, setSelectedFilters] = useState({
     colors: [],
-    sizes: [],   
+    sizes: [],
   });
 
   const [filteredProducts, setFilteredProducts] = useState(productsArray)
@@ -50,7 +54,18 @@ const Tshirts = ({ products }) => {
       setPriceRange([priceRange[0], Math.max(newValue[1], priceRange[0] + minDistance)]);
     }
   };
-  
+
+  const clearFilters = () => {
+
+    setSelectedFilters({
+      colors: [],
+      sizes: [],      
+    });
+
+    setPriceRange([600, 2000])
+
+  }
+
 
   function filteredData(products, selectedFilters, priceRange) {
     const { colors, sizes } = selectedFilters;
@@ -74,7 +89,7 @@ const Tshirts = ({ products }) => {
       const price = parseFloat(product.price);
       const min = priceRange[0];
       const max = priceRange[1];
-  
+
       return price >= min && price <= max;
     });
 
@@ -84,56 +99,97 @@ const Tshirts = ({ products }) => {
 
 
   return (
-    <div className='flex'>
+    <>
+      <div className='flex'>
 
-      <FilterSection
-        handleCheckboxChange={handleCheckboxChange}
-        selectedFilters={selectedFilters}
-        handleChange={handleChange}
-        priceRange={priceRange}
-      />
+        <div className={`bg-pink-100 h-full w-64 fixed top-0 z-30 overflow-x-hidden transition-all duration-300 ${showSidebar ? 'right-0' : '-right-96'}`}>
+          <button
+            className='absolute top-4 right-4 p-2 text-2xl'
+            onClick={() => setShowSidebar(false)}
+          >
+            <AiOutlineCloseCircle />
+          </button>
+          <div className="flex flex-col items-start ml-10">
 
-      <section className="text-gray-600 body-font w-full">
-        <div className="container px-5 py-24 mx-auto">
-          <div className="flex flex-wrap -m-4">
+            <FilterSection
+              handleCheckboxChange={handleCheckboxChange}
+              selectedFilters={selectedFilters}
+              handleChange={handleChange}
+              priceRange={priceRange}
+              setShowSidebar={setShowSidebar}
+              clearFilters={clearFilters}
+            />
 
-            {filteredProducts?.map((product) => {
-
-              return (
-                <div key={product._id} className="lg:w-1/4 md:w-1/2 p-4 w-full shadow-lg">
-                  <Link passHref={true} href={`/product/${product.slug}`} >
-                    <div className="block relative rounded overflow-hidden">
-                      <img alt="ecommerce" className="h-[36vh] md:h-[42vh] block m-auto" src={product.img} />
-                    </div>
-                    <div className="mt-4 text-center md:text-left">
-                      <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{product.category}</h3>
-                      <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
-                      <p className="mt-1">Rs {product.price}</p>
-                      <div className="mt-1">
-                        {product.size.includes('S') && <span className='border border-gray-300 px-1 mx-1'>S</span>}
-                        {product.size.includes('M') && <span className='border border-gray-300 px-1 mx-1'>M</span>}
-                        {product.size.includes('L') && <span className='border border-gray-300 px-1 mx-1'>L</span>}
-                        {product.size.includes('XL') && <span className='border border-gray-300 px-1 mx-1'>XL</span>}
-                        {product.size.includes('XXL') && <span className='border border-gray-300 px-1 mx-1'>XXL</span>}
-                      </div>
-                      <div className="mt-1">
-                        {product.color.includes('blue') && <button className='border-2 border-gray-300 ml-1 bg-blue-500 rounded-full w-6 h-6 focus:outline-none'></button>}
-                        {product.color.includes('red') && <button className='border-2 border-gray-300 ml-1 bg-red-500 rounded-full w-6 h-6 focus:outline-none'></button>}
-                        {product.color.includes('yellow') && <button className='border-2 border-gray-300 ml-1 bg-yellow-500 rounded-full w-6 h-6 focus:outline-none'></button>}
-                        {product.color.includes('purple') && <button className='border-2 border-gray-300 ml-1 bg-purple-500 rounded-full w-6 h-6 focus:outline-none'></button>}
-                        {product.color.includes('green') && <button className='border-2 border-gray-300 ml-1 bg-green-500 rounded-full w-6 h-6 focus:outline-none'></button>}
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-
-              )
-            })}
           </div>
         </div>
-      </section >
 
-    </div>
+
+        <div className="hidden md:flex flex-col items-center h-full sticky top-24 border ml-3 pb-10">
+          <FilterSection
+            handleCheckboxChange={handleCheckboxChange}
+            selectedFilters={selectedFilters}
+            handleChange={handleChange}
+            priceRange={priceRange}
+            setShowSidebar={setShowSidebar}
+            clearFilters={clearFilters}
+          />
+        </div>
+
+        <section className="text-gray-600 body-font w-full">
+
+          <div className="container px-5 py-7 mx-auto">
+            <h1 className='text-3xl font-extrabold mb-3'>Tshirts</h1>
+            <div className='mb-3'>
+              <button
+                className='md:hidden flex items-center justify-between p-1 w-auto bg-white text-black ;'
+                onClick={() => setShowSidebar(true)}
+              >
+                <BsFilterLeft className='mr-2 text-2xl' />
+                <span className=''>Apply Filters</span>
+              </button>
+
+            </div>
+
+            <div className="flex flex-wrap -m-4">
+
+              {filteredProducts?.map((product) => {
+
+                return (
+                  <div key={product._id} className="lg:w-1/4 md:w-1/3 p-4 w-1/2 shadow-lg">
+                    <Link passHref={true} href={`/product/${product.slug}`} >
+                      <div className="block relative rounded overflow-hidden">
+                        <img alt="ecommerce" className="h-[36vh] md:h-[42vh] block m-auto" src={product.img} />
+                      </div>
+                      <div className="mt-4 text-center md:text-left">
+                        <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{product.category}</h3>
+                        <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
+                        <p className="mt-1">Rs {product.price}</p>
+                        <div className="mt-1">
+                          {product.size.includes('S') && <span className='border border-gray-300 px-1 mx-1'>S</span>}
+                          {product.size.includes('M') && <span className='border border-gray-300 px-1 mx-1'>M</span>}
+                          {product.size.includes('L') && <span className='border border-gray-300 px-1 mx-1'>L</span>}
+                          {product.size.includes('XL') && <span className='border border-gray-300 px-1 mx-1'>XL</span>}
+                          {product.size.includes('XXL') && <span className='border border-gray-300 px-1 mx-1'>XXL</span>}
+                        </div>
+                        <div className="mt-1">
+                          {product.color.includes('blue') && <button className='border-2 border-gray-300 ml-1 bg-blue-500 rounded-full w-6 h-6 focus:outline-none'></button>}
+                          {product.color.includes('red') && <button className='border-2 border-gray-300 ml-1 bg-red-500 rounded-full w-6 h-6 focus:outline-none'></button>}
+                          {product.color.includes('yellow') && <button className='border-2 border-gray-300 ml-1 bg-yellow-500 rounded-full w-6 h-6 focus:outline-none'></button>}
+                          {product.color.includes('purple') && <button className='border-2 border-gray-300 ml-1 bg-purple-500 rounded-full w-6 h-6 focus:outline-none'></button>}
+                          {product.color.includes('green') && <button className='border-2 border-gray-300 ml-1 bg-green-500 rounded-full w-6 h-6 focus:outline-none'></button>}
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+
+                )
+              })}
+            </div>
+          </div>
+        </section >
+
+      </div>
+    </>
   )
 }
 

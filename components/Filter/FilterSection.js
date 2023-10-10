@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
 import Slider from '@mui/material/Slider';
+import { AiOutlineClear } from 'react-icons/ai';
 
 
 
 
-const FilterSection = ({ handleCheckboxChange, selectedFilters, handleChange, priceRange }) => {
+const FilterSection = ({ handleCheckboxChange, selectedFilters, handleChange, priceRange, setShowSidebar, clearFilters }) => {
 
-    
+
 
 
     return (
-        <div className='h-full w-1/4 sticky top-24 border flex flex-col items-center pb-10'>
+        <>
+
             <h1 className='my-5 text-lg font-bold'>Filters:</h1>
 
             <div>
@@ -45,24 +47,43 @@ const FilterSection = ({ handleCheckboxChange, selectedFilters, handleChange, pr
                 </div>
             </div>
 
-            <div className='flex flex-col items-center w-40'>
-                <h2 className='mb-3 text-base font-semibold'>Price</h2>                
-                
-                    <Slider
+            <div className='flex flex-col items-center w-40 px-5'>
+                <h2 className='mb-3 text-base font-semibold'>Price</h2>
+
+                <div className='flex justify-between w-full text-xs'>
+                    <span className='w-5'>Min: {priceRange[0]}</span>
+                    <span className='w-5'>Max: {priceRange[1]}</span>
+                </div>
+
+                <Slider
                     value={priceRange}
                     onChange={handleChange}
                     min={300}
                     step={50}
-                    max={2500}                                       
+                    max={2500}
                     valueLabelDisplay="auto"
                     aria-labelledby='range-slider'
                     disableSwap
                     style={{ width: '100%' }}
-                    />
-                
+                />
+
             </div>
 
-        </div>
+            <div className='md:hidden my-3'>
+            <button onClick={()=>{setShowSidebar(false)}} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none rounded text-sm`}>Apply Filters</button>
+            </div>
+
+            <button
+                className='flex items-center justify-between p-1 w-auto bg-transparent text-black my-3 ;'
+                onClick={clearFilters}
+                
+              >
+                <AiOutlineClear className='mr-2' />
+                <span className='text-decoration-line: underline'>Clear Filters</span>
+              </button>
+        </>
+
+
     )
 }
 
