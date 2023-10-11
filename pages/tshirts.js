@@ -4,8 +4,8 @@ import mongoose from "mongoose";
 import Product from "@/models/Product"
 import FilterSection from '@/components/Filter/FilterSection';
 import { BsFilterLeft } from 'react-icons/bs';
-import { AiOutlineClear, AiOutlineClose, AiOutlineCloseCircle } from 'react-icons/ai';
-import {IoIosClose} from 'react-icons/io'
+import { AiFillCloseCircle } from 'react-icons/ai';
+import { IoIosClose } from 'react-icons/io'
 
 
 
@@ -13,7 +13,10 @@ const Tshirts = ({ products }) => {
 
   const productsArray = Object.values(products);
 
-  const [priceRange, setPriceRange] = useState([600, 2000]);
+  const minRange = 600
+  const maxRange = 2000
+
+  const [priceRange, setPriceRange] = useState([minRange, maxRange]);
   const [showSidebar, setShowSidebar] = useState(false);
 
 
@@ -60,10 +63,10 @@ const Tshirts = ({ products }) => {
 
     setSelectedFilters({
       colors: [],
-      sizes: [],      
+      sizes: [],
     });
 
-    setPriceRange([600, 2000])
+    setPriceRange([minRange, maxRange])
 
   }
 
@@ -105,12 +108,12 @@ const Tshirts = ({ products }) => {
 
         <div className={`bg-pink-100 h-full w-64 fixed top-0 z-30 overflow-x-hidden transition-all duration-300 ${showSidebar ? 'right-0' : '-right-96'}`}>
           <button
-            className='absolute top-4 right-4 p-2 text-2xl'
+            className='absolute top-3 right-3 text-2xl'
             onClick={() => setShowSidebar(false)}
           >
-            <AiOutlineCloseCircle />
+            <AiFillCloseCircle className='text-pink-500' />
           </button>
-          <div className="flex flex-col items-start ml-10">
+          <div className="flex flex-col items-start ml-10 mr-10">
 
             <FilterSection
               handleCheckboxChange={handleCheckboxChange}
@@ -125,7 +128,7 @@ const Tshirts = ({ products }) => {
         </div>
 
 
-        <div className="hidden md:flex flex-col items-center h-full sticky top-24 border ml-3 pb-10">
+        <div className="hidden md:flex flex-col items-center h-full sticky top-24 border rounded-md ml-3 pb-10">
           <FilterSection
             handleCheckboxChange={handleCheckboxChange}
             selectedFilters={selectedFilters}
@@ -139,29 +142,40 @@ const Tshirts = ({ products }) => {
         <section className="text-gray-600 body-font w-full">
 
           <div className="container px-5 py-7 mx-auto">
-            <h1 className='text-3xl font-extrabold mb-3'>Tshirts</h1>
+            <h1 className='text-3xl font-extrabold mb-5'>Tshirts</h1>
             <div className='md:hidden mb-3'>
               <button
                 className='flex items-center justify-between p-1 w-auto bg-white text-black ;'
                 onClick={() => setShowSidebar(true)}
               >
                 <BsFilterLeft className='mr-2 text-2xl' />
-                <span className=''>Apply Filters</span>
+                <span className='font-semibold'>Apply Filters</span>
               </button>
 
-              {filteredProducts.length < productsArray.length && <button
-                className='flex items-center justify-between w-auto bg-transparent text-black border rounded-full border-zinc-300 px-2 my-1'
-                onClick={clearFilters}
-                
-              >                
-                <span className='text-xs'>Clear</span>
-                <IoIosClose className='ml-1 w-4 h-4'/>
-              </button>}
+              {(selectedFilters.colors.length > 0 ||
+              selectedFilters.sizes.length > 0 ||
+              priceRange[0] !== minRange ||
+              priceRange[1] !== maxRange) &&
+
+                <button
+                  className='flex items-center justify-between w-auto bg-transparent text-black border rounded-full border-zinc-300 px-2 my-1'
+                  onClick={clearFilters}
+
+                >
+                  <span className='text-xs'>Clear</span>
+                  <IoIosClose className='ml-1 w-4 h-4' />
+                </button>}
 
 
             </div>
 
             <div className="flex flex-wrap -m-4">
+
+              {filteredProducts.length === 0 &&
+
+                <span className='mx-auto mt-3 md:m-5 font-semibold'> No Products Found</span>
+
+              }
 
               {filteredProducts?.map((product) => {
 
