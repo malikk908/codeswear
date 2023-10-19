@@ -169,7 +169,7 @@ const Tshirts = ({ products }) => {
 
             </div>
 
-            <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(200px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300,1fr))]">
+            <div className="grid gap-3 md:gap-4 grid-cols-[repeat(auto-fill,minmax(140px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300,1fr))]">
 
               {filteredProducts.length === 0 &&
 
@@ -180,10 +180,10 @@ const Tshirts = ({ products }) => {
               {filteredProducts?.map((product) => {
 
                 return (
-                  <div key={product._id} className="flex flex-col gap-2 p-4 shadow-lg dark:text-gray-300 dark:bg-[#1e293b]  rounded-lg ">
+                  <div key={product._id} className="flex flex-col gap-2 p-3 md:p4 shadow-lg dark:text-gray-300 dark:bg-[#1e293b]  rounded-lg ">
                     <Link passHref={true} href={`/product/${product.slug}`} >
                       <div className="block relative rounded overflow-hidden ">
-                        <img alt="ecommerce" className="h-[36vh] md:h-[42vh] block m-auto" src={product.img} />
+                        <img alt="ecommerce" className="h-[26vh] md:h-[42vh] block m-auto" src={product.img} />
                       </div>
                       <div className="mt-4 text-center md:text-left">
                         
