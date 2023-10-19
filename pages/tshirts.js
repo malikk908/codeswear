@@ -104,9 +104,9 @@ const Tshirts = ({ products }) => {
 
   return (
     <>
-      <div className='flex'>
+      <div className='flex '>
 
-        <div className={`bg-pink-100 h-full w-64 fixed top-0 z-30 overflow-x-hidden transition-all duration-300 ${showSidebar ? 'right-0' : '-right-96'}`}>
+        <div className={`bg-pink-100 h-full w-64 fixed top-0 z-30 overflow-x-hidden transition-all duration-300 dark:text-gray-100 dark:bg-[#475569] ${showSidebar ? 'right-0' : '-right-96'}`}>
           <button
             className='absolute top-3 right-3 text-2xl'
             onClick={() => setShowSidebar(false)}
@@ -142,10 +142,10 @@ const Tshirts = ({ products }) => {
         <section className="text-gray-600 body-font w-full">
 
           <div className="container px-5 py-7 mx-auto">
-            <h1 className='text-3xl font-extrabold mb-5'>Tshirts</h1>
+            <h1 className='text-3xl font-extrabold mb-5 dark:text-gray-300'>Tshirts</h1>
             <div className='md:hidden mb-3'>
               <button
-                className='flex items-center justify-between p-1 w-auto bg-white text-black ;'
+                className='flex items-center justify-between p-1 w-auto bg-white text-black dark:bg-[#0f172a] dark:text-gray-300 ;'
                 onClick={() => setShowSidebar(true)}
               >
                 <BsFilterLeft className='mr-2 text-2xl' />
@@ -169,7 +169,7 @@ const Tshirts = ({ products }) => {
 
             </div>
 
-            <div className="flex flex-wrap -m-4">
+            <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(200px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300,1fr))]">
 
               {filteredProducts.length === 0 &&
 
@@ -180,14 +180,14 @@ const Tshirts = ({ products }) => {
               {filteredProducts?.map((product) => {
 
                 return (
-                  <div key={product._id} className="lg:w-1/4 md:w-1/3 p-4 w-1/2 shadow-lg">
+                  <div key={product._id} className="flex flex-col gap-2 p-4 shadow-lg dark:text-gray-300 dark:bg-[#1e293b]  rounded-lg ">
                     <Link passHref={true} href={`/product/${product.slug}`} >
-                      <div className="block relative rounded overflow-hidden">
+                      <div className="block relative rounded overflow-hidden ">
                         <img alt="ecommerce" className="h-[36vh] md:h-[42vh] block m-auto" src={product.img} />
                       </div>
                       <div className="mt-4 text-center md:text-left">
-                        <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{product.category}</h3>
-                        <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
+                        
+                        <h2 className="text-gray-900 title-font text-lg font-medium dark:text-gray-400">{product.title}</h2>
                         <p className="mt-1">Rs {product.price}</p>
                         <div className="mt-1">
                           {product.size.includes('S') && <span className='border border-gray-300 px-1 mx-1'>S</span>}

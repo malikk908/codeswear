@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
-import { BsFillBagCheckFill } from 'react-icons/bs';
+import { BsFillBagCheckFill, BsFillMoonStarsFill, BsFillSunFill } from 'react-icons/bs';
 import { MdAccountCircle } from 'react-icons/md';
 
 import { useRef } from 'react';
@@ -9,11 +9,15 @@ import { useRouter } from 'next/router';
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTheme } from "next-themes"
+
 
 
 
 
 const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
+
+  const { theme, setTheme } = useTheme()
 
 
   const [dropdown, setDropdown] = useState(false)
@@ -50,9 +54,17 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
     
   }
 
+  const toggleTheme = () => {
+    if(theme ==="light"){
+      setTheme("dark")
+    }else{
+      setTheme("light")
+    }
+  }
+
 
   return (
-    <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white'>
+    <div className='flex flex-col md:flex-row md:justify-start justify-center items-center py-2 shadow-md sticky top-0 z-10 bg-white dark:bg-[#0c1221]'>
 
       <div className="logo mr-auto md:mx-5">
         <Link href={"/"}><img src="/logo2.png" alt="" /></Link>
@@ -65,10 +77,10 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
           <Link href={"/mugs"}><li>Mugs</li></Link>
         </ul>
       </div>
-      <div className="cart absolute right-0 top-2 mx-5 mt-2 font-bold flex ">
-        {!session && <button onClick={() => { signIn() }} className='mx-2 bg-pink-600 rounded text-sm text-white p-2'>Login</button>}
-        <span onClick={()=>{setDropdown(!dropdown)}} onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{session && <MdAccountCircle className='mx-2 text-xl md:text-3xl' />}
-          {dropdown && <div className='absolute right-8 bg-pink-300 top-7 py-4 rounded-md px-5 w-36'>
+      <div className="cart absolute right-0 top-2 mx-5 mt-2 font-bold flex gap-x-2">
+        {!session && <button onClick={() => { signIn() }} className='bg-pink-600 rounded text-sm text-white p-2'>Login</button>}
+        <span onClick={()=>{setDropdown(!dropdown)}} onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }}>{session && <MdAccountCircle className='text-xl md:text-3xl text-pink-600' />}
+          {dropdown && <div className='absolute right-8 bg-pink-300 dark:bg-[#475569] top-7 py-4 rounded-md px-5 w-36'>
             <ul>
               <Link href={"/myaccount"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>My Account</li></Link>
               <Link href={"/orders"}><li className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Orders</li></Link>
@@ -76,11 +88,19 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
             </ul>
           </div>}</span>
 
-        <button onClick={toggleCart}><AiOutlineShoppingCart className='text-xl md:text-3xl' /></button>
+        <button onClick={toggleCart}><AiOutlineShoppingCart className='text-xl md:text-3xl text-pink-600' /></button>
+
+        <button
+        onClick={toggleTheme}
+        className='text-lg md:text-2xl'>
+          {theme ==="light" ? 
+          <BsFillMoonStarsFill className='text-pink-600'/> : <BsFillSunFill className='text-pink-600'/>
+        }
+        </button>
 
 
       </div>
-      <div ref={ref} className={`w-72 z-10 h-[100vh] overflow-x-hidden sideCart fixed top-0 bg-pink-100 px-8 py-10 transition-all ${sidebar ? 'right-0' : '-right-96'}`}>
+      <div ref={ref} className={`w-72 z-10 h-[100vh] overflow-x-hidden sideCart fixed top-0 bg-pink-100 dark:bg-[#475569] dark:text-gray-100 px-8 py-10 transition-all ${sidebar ? 'right-0' : '-right-96'}`}>
         <h2 className='font-bold text-l text-center'>Shopping Cart</h2>
         <span className='absolute top-3 right-3 cursor-pointer text-pink-500 text-2xl' onClick={toggleCart}><AiFillCloseCircle /></span>
         <ol className='list-decimal font-semibold'>

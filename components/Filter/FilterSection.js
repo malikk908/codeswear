@@ -4,16 +4,10 @@ import { FaFilter } from 'react-icons/fa';
 import {AiOutlineClear} from 'react-icons/ai'
 
 
-
-
 const FilterSection = ({ handleCheckboxChange, selectedFilters, handleChange, priceRange, setShowSidebar, clearFilters }) => {
-
-
-
 
     return (
         <>
-
             <div className='mt-10 mb-5 flex items-center gap-x-2 mx-auto'>
                 <FaFilter className='text-lg font-bold text-pink-500' />
                 <h1 className='text-lg font-bold'>Filters:</h1>
@@ -76,11 +70,11 @@ const FilterSection = ({ handleCheckboxChange, selectedFilters, handleChange, pr
             </div>
 
             <div className='md:hidden my-3'>
-                <button onClick={() => { setShowSidebar(false) }} className={`flex mr-2 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none rounded text-sm`}>Apply Filters</button>
+                <button onClick={() => { setShowSidebar(false) }} className={`flex mr-2 text-white  bg-pink-500 disabled:opacity-60 border-0 py-2 px-2 focus:outline-none rounded text-sm`}>Apply Filters</button>
             </div>
 
             <button
-                className='flex items-center justify-between p-1 w-auto bg-transparent text-black my-3 ;'
+                className='flex items-center justify-between p-1 w-auto bg-transparent text-black dark:text-gray-300 my-3 ;'
                 onClick={clearFilters}
 
             >
