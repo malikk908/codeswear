@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle, AiOutlineSearch } from 'react-icons/ai';
-import { BsFillBagCheckFill, BsFillMoonStarsFill, BsFillSunFill, BsSearch } from 'react-icons/bs';
+import { BsFillBagCheckFill, BsFillMoonStarsFill, BsFillSunFill } from 'react-icons/bs';
 import { MdAccountCircle } from 'react-icons/md';
 
 import { useRef } from 'react';
@@ -14,12 +14,9 @@ import { FaHome } from 'react-icons/fa';
 
 
 
-
-
 const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
 
   const { theme, setTheme } = useTheme()
-
 
   const [dropdown, setDropdown] = useState(false)
   const [sidebar, setSidebar] = useState(false)
@@ -28,23 +25,24 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
   const { data: session } = useSession()
 
 
-
   useEffect(() => {
+    
+
     Object.keys(cart).length !== 0 && setSidebar(true)
+
     let exempted = ['/checkout', '/order', '/orders', '/myaccount', '/auth/login', '/auth/signup', '/auth/forgot']
     if (exempted.includes(router.pathname)) {
       setSidebar(false)
     }
-  }, [Object.keys(cart).length])
+    
+  }, [subTotal])
 
 
   const ref = useRef()
 
-
   const toggleCart = () => {
 
     setSidebar(!sidebar)
-
   }
 
   const handleLogout = async () => {
@@ -52,7 +50,6 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
     const data = await signOut({ redirect: false, callbackUrl: "/" })
     router.push(data.url)
     toast.success('You have successfully logged out!')
-
   }
 
   const toggleTheme = () => {

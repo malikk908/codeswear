@@ -1,4 +1,5 @@
 import Footer from '@/components/Footer'
+import Loader from '@/components/Loader'
 import Navbar from '@/components/Navbar'
 import { ThemeProvider } from '@/components/themeprovider'
 import '@/styles/globals.css'
@@ -17,10 +18,10 @@ import LoadingBar from 'react-top-loading-bar'
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
 
   const [progress, setProgress] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)  
 
   const [cart, setCart] = useState({})
   const [subTotal, setSubTotal] = useState(0)
-  const [key, setKey] = useState()
 
   const router = useRouter()
 
@@ -28,12 +29,25 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
 
 
   useEffect(() => {
+    let timeout;
+
     router.events.on('routeChangeStart', () => {
       setProgress(40)
+
+      timeout = setTimeout(() => {
+        setIsLoading(true);
+      }, 300);      
+      
     })
+
     router.events.on('routeChangeComplete', () => {
       setProgress(100)
+
+      clearTimeout(timeout)
+
+      setIsLoading(false)
     })
+
     try {
       if (localStorage.getItem("cart")) {
         setCart(JSON.parse(localStorage.getItem("cart")))
@@ -44,8 +58,10 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
       localStorage.clear()
     }
 
-
-    setKey(Math.random())
+    return () => {
+      
+      clearTimeout(timeout);
+    }
 
   }, [router.query])
 
@@ -136,7 +152,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
           theme="light"
         />
 
-        {key && <Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />}
+        <Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} clearCart={clearCart} subTotal={subTotal} />
 
         <LoadingBar
           color='#ff2d55'
@@ -146,7 +162,13 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
           onLoaderFinished={() => setProgress(0)}
         />
 
-        <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />
+        {isLoading ? (
+          <Loader/>
+        ) : (
+          <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />
+        )}
+
+        
 
         <Footer />
       </ThemeProvider>
