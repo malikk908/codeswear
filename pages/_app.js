@@ -25,7 +25,11 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
 
   const router = useRouter()
 
-
+  useEffect(() => {
+    if (isLoading) {
+      window.scrollTo(0, 0); // Scroll to the top of the page
+    }
+  }, [isLoading]);
 
 
   useEffect(() => {
@@ -36,7 +40,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
 
       timeout = setTimeout(() => {
         setIsLoading(true);
-      }, 300);      
+      }, 350);      
       
     })
 
@@ -165,10 +169,9 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         {isLoading ? (
           <Loader/>
         ) : (
-          <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />
-        )}
-
-        
+          <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />          
+        )} 
+                      
 
         <Footer />
       </ThemeProvider>

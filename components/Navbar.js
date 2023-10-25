@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { AiOutlineShoppingCart, AiFillCloseCircle, AiFillPlusCircle, AiFillMinusCircle, AiOutlineSearch } from 'react-icons/ai';
-import { BsFillBagCheckFill, BsFillMoonStarsFill, BsFillSunFill } from 'react-icons/bs';
+import { BsFillBagCheckFill, BsMoonStarsFill, BsSunFill } from 'react-icons/bs';
 import { MdAccountCircle } from 'react-icons/md';
 
 import { useRef } from 'react';
@@ -18,15 +18,18 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
 
   const { theme, setTheme } = useTheme()
 
+  const [loaded, setLoaded] = useState(false);
+
   const [dropdown, setDropdown] = useState(false)
   const [sidebar, setSidebar] = useState(false)
   const router = useRouter()
 
   const { data: session } = useSession()
 
+  //Hydration
+  useEffect(() => setLoaded(true), []);
 
   useEffect(() => {
-    
 
     Object.keys(cart).length !== 0 && setSidebar(true)
 
@@ -34,7 +37,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
     if (exempted.includes(router.pathname)) {
       setSidebar(false)
     }
-    
+
   }, [subTotal])
 
 
@@ -95,14 +98,25 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
 
           <button onClick={toggleCart}><AiOutlineShoppingCart className='text-xl md:text-3xl text-pink-600' /></button>
 
+
           <button
             onClick={toggleTheme}
             className='text-lg md:text-2xl mx-2'>
-            {theme === "light" ?
-              <BsFillMoonStarsFill className='text-pink-600' /> : <BsFillSunFill className='text-pink-600' />
-            }
+
+            {theme === "light" && loaded &&
+              <BsMoonStarsFill className='text-pink-600' />}
+
+            {theme === "dark" && loaded &&
+              <BsSunFill className='text-pink-600' />}
+
           </button>
+
+
+
+
         </div>
+
+
 
         <div ref={ref} className={`w-72 z-10 h-[100vh] overflow-x-hidden sideCart fixed top-0 bg-pink-100 dark:bg-[#475569] dark:text-gray-100 px-8 py-10 transition-all ${sidebar ? 'right-0' : '-right-96'}`}>
           <h2 className='font-bold text-l text-center'>Shopping Cart</h2>
@@ -153,12 +167,16 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
           <button
             onClick={toggleTheme}
             className='text-xl md:text-2xl'>
-            {theme === "light" ?
-              <BsFillMoonStarsFill className='text-pink-600' /> : <BsFillSunFill className='text-pink-600' />
-            }
+
+            {theme === "light" && loaded &&
+              <BsMoonStarsFill className='text-pink-600' />}
+
+            {theme === "dark" && loaded &&
+              <BsSunFill className='text-pink-600' />}
+
           </button>
         </div>
-        
+
 
         <div onClick={() => { setDropdown(!dropdown) }} onMouseOver={() => { setDropdown(true) }} onMouseLeave={() => { setDropdown(false) }} className='flex items-center justify-center w-1/4'>
 
@@ -178,7 +196,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
             <div className='absolute right-3 bg-pink-300 dark:bg-[#475569] bottom-10 py-4 rounded-md px-5 w-36 font-bold'>
               <ul>
                 <li onClick={() => { signIn() }} className='py-1 text-sm hover:text-pink-700 cursor-pointer'>Login</li>
-               
+
               </ul>
             </div>
 
