@@ -18,18 +18,12 @@ import LoadingBar from 'react-top-loading-bar'
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
 
   const [progress, setProgress] = useState(0)
-  const [isLoading, setIsLoading] = useState(false)  
+  const [isLoading, setIsLoading] = useState(false)
 
   const [cart, setCart] = useState({})
   const [subTotal, setSubTotal] = useState(0)
 
   const router = useRouter()
-
-  useEffect(() => {
-    if (isLoading) {
-      window.scrollTo(0, 0); // Scroll to the top of the page
-    }
-  }, [isLoading]);
 
 
   useEffect(() => {
@@ -38,10 +32,14 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
     router.events.on('routeChangeStart', () => {
       setProgress(40)
 
-      timeout = setTimeout(() => {
-        setIsLoading(true);
-      }, 350);      
-      
+      let exempted = ['/auth/login', '/auth/signup', '/auth/forgot']
+      if (!exempted.includes(router.pathname)) {
+
+        timeout = setTimeout(() => {
+          setIsLoading(true);
+        }, 300);
+      }
+
     })
 
     router.events.on('routeChangeComplete', () => {
@@ -51,6 +49,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
 
       setIsLoading(false)
     })
+
 
     try {
       if (localStorage.getItem("cart")) {
@@ -63,7 +62,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
     }
 
     return () => {
-      
+
       clearTimeout(timeout);
     }
 
@@ -167,11 +166,11 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         />
 
         {isLoading ? (
-          <Loader/>
+          <Loader />
         ) : (
-          <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />          
-        )} 
-                      
+          <Component cart={cart} addToCart={addToCart} buyNow={buyNow} removeFromCart={removeFromCart} clearCart={clearCart} clearCartAfterCheckout={clearCartAfterCheckout} subTotal={subTotal} {...pageProps} />
+        )}
+
 
         <Footer />
       </ThemeProvider>
