@@ -14,7 +14,6 @@ import LoadingBar from 'react-top-loading-bar'
 
 
 
-
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
 
   const [progress, setProgress] = useState(0)
@@ -38,8 +37,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
         timeout = setTimeout(() => {
           setIsLoading(true);
         }, 300);
-      }
-
+      }      
     })
 
     router.events.on('routeChangeComplete', () => {

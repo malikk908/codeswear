@@ -8,8 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-export default function Post({ addToCart, buyNow, product, variants, error }) {
-
+export default function ProductPage({ addToCart, buyNow, product, variants, error }) {
 
   const router = useRouter()
   const { slug } = router.query
@@ -73,7 +72,7 @@ export default function Post({ addToCart, buyNow, product, variants, error }) {
         theme="light"
       />
 
-      <div className="container px-5 py-14 mx-auto">
+      <div className="container px-8 py-14 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap">
           <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-20 object-cover object-top rounded" src={product.img} />
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
@@ -146,16 +145,12 @@ export default function Post({ addToCart, buyNow, product, variants, error }) {
                 </div>
               </div>
             </div>
-            <div className="flex">
-              {product.availableQty <= 0 && <span className="title-font font-medium text-2xl text-gray-900">Out of Stock</span>}
-              {product.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-900 dark:text-gray-200">Rs. {product.price}</span>}
-              <button disabled={product.availableQty <= 0} onClick={() => { addToCart(slug, 1, product.price, product.title, product.size, product.color) }} className={`flex ml-7 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-1 text-sm md:px-6 focus:outline-none ${!product.availableQty <= 0 && `hover:bg-pink-600`} rounded`}>Add to Cart</button>
-              <button disabled={product.availableQty <= 0} onClick={() => { buyNow(slug, 1, product.price, product.title, product.size, product.color) }} className={`flex ml-4 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-1 text-sm md:px-6 focus:outline-none ${!product.availableQty <= 0 && `hover:bg-pink-600`} rounded`}>Buy Now</button>
-              <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-8">
-                <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
-                </svg>
-              </button>
+            <div className="flex items-center">
+              {product.availableQty <= 0 && <span className="title-font font-medium text-xl text-gray-900 dark:text-gray-200">Out of Stock</span>}
+              {product.availableQty > 0 && <span className="title-font font-medium text-xl text-gray-900 dark:text-gray-200">Rs. {product.price}</span>}
+              <button disabled={product.availableQty <= 0} onClick={() => { addToCart(slug, 1, product.price, product.title, product.size, product.color) }} className={`flex ml-7 text-white bg-pink-500 disabled:opacity-60 border-0  py-2 px-3 text-sm md:px-6 focus:outline-none ${!product.availableQty <= 0 && `hover:bg-pink-600`} rounded`}>Add to Cart</button>
+              <button disabled={product.availableQty <= 0} onClick={() => { buyNow(slug, 1, product.price, product.title, product.size, product.color) }} className={`flex ml-4 text-white bg-pink-500 disabled:opacity-60 border-0 py-2 px-3 text-sm md:px-6 focus:outline-none ${!product.availableQty <= 0 && `hover:bg-pink-600`} rounded`}>Buy Now</button>
+              
             </div>
             <div className="pin mt-5 flex space-x-2 text-sm">
               <input onChange={onChangePin} className='flex mx-1 px-3 py-2 border-gray-400 border-2 rounded-md dark:bg-[#0f172a]' type="text" placeholder='Enter your Pincode' />
@@ -171,7 +166,7 @@ export default function Post({ addToCart, buyNow, product, variants, error }) {
 }
 
 export const getServerSideProps = async (context) => {
-  let error=null;
+
   if (!mongoose.connections[0].readyState) {
     await mongoose.connect(process.env.MONGO_URI)
 
@@ -196,6 +191,6 @@ export const getServerSideProps = async (context) => {
   }
 
   return {
-    props: { product: JSON.parse(JSON.stringify(product)), variants: JSON.parse(JSON.stringify(ColorSizeSlug)) }
+    props: { product: JSON.parse(JSON.stringify(product)), variants: JSON.parse(JSON.stringify(ColorSizeSlug))}
   }
 }
