@@ -350,7 +350,8 @@ const MyAccount = () => {
           </div>
 
           <div className="mx-auto mt-2 flex">
-            <div className="px-2 w-full sm:w-1/2">
+            <div className="px-2 w-full
+             sm:w-1/2">
               <div className="relative mb-4">
                 <label htmlFor="state" className="leading-7 text-sm text-gray-600 dark:text-gray-300">Confirm Password</label>
                 <input onChange={handlePasswordChange} value={cpassword} type="password" id="cpassword" name="cpassword" required className="w-full bg-white text-gray-700 dark:text-gray-300  dark:bg-gray-800 rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none  py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />

@@ -63,6 +63,9 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
     }
   }
 
+  console.log(loaded)
+
+
 
   return (
     <nav className='sticky top-0 z-10 bg-white dark:bg-[#0c1221]'>
