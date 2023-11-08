@@ -64,6 +64,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
   }
 
   console.log(loaded)
+  console.log(theme)
 
 
 
