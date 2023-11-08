@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import Error from 'next/error'
 
 import Product from "@/models/Product"
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -18,12 +17,13 @@ export default function ProductPage({ addToCart, buyNow, product, variants, erro
   const checkServiceability = async () => {
     let pins = await fetch(`/api/pincode`)
     let pinJson = await pins.json()
-    if (pinJson.includes(parseInt(pin))) {
+    
+    if (Object.keys(pinJson).includes(pin)) {
       setService(true)
-      toast.success('Your Pincode is serviceable!')
+      // toast.success('Your Pincode is serviceable!')
     } else {
       setService(false)
-      toast.error('Sorry! Pincode NOT serviceable!')
+      // toast.error('Sorry! Pincode NOT serviceable!')
 
     }
 
@@ -34,8 +34,8 @@ export default function ProductPage({ addToCart, buyNow, product, variants, erro
 
   }
 
-  const [color, setColor] = useState()
-  const [size, setSize] = useState()
+  const [color, setColor] = useState(product.color)
+  const [size, setSize] = useState(product.size)
 
   useEffect(() => {
     if (!error) {
@@ -48,6 +48,12 @@ export default function ProductPage({ addToCart, buyNow, product, variants, erro
 
 
   const refreshVariant = (newsize, newcolor) => {
+
+
+    if(!Object.keys(variants[newcolor]).includes(newsize)){
+      newsize = Object.keys(variants[newcolor])[0]
+    }
+
     let url = `/product/${variants[newcolor][newsize]['slug']}`
     router.push(url);
   }
@@ -57,9 +63,10 @@ export default function ProductPage({ addToCart, buyNow, product, variants, erro
   }
 
 
+
   return <>
     <section className="text-gray-600 body-font overflow-hidden dark:text-gray-300">
-      <ToastContainer
+      {/* <ToastContainer
         position="bottom-center"
         autoClose={1000}
         hideProgressBar={false}
@@ -70,14 +77,14 @@ export default function ProductPage({ addToCart, buyNow, product, variants, erro
         draggable
         pauseOnHover
         theme="light"
-      />
+      /> */}
 
       <div className="container px-8 py-14 mx-auto">
         <div className="lg:w-4/5 mx-auto flex flex-wrap">
           <img alt="ecommerce" className="lg:w-1/2 w-full lg:h-auto px-20 object-cover object-top rounded" src={product.img} />
           <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
             <h2 className="text-sm title-font text-gray-500 dark:text-gray-400 tracking-widest">CodesWear</h2>
-            <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title} ({product.size}/{product.color})</h1>
+            <h1 className="text-gray-900 dark:text-gray-300 text-3xl title-font font-medium mb-1">{product.title} ({product.size} / {product.color})</h1>
             <div className="flex mb-4">
               <span className="flex items-center">
                 <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 text-pink-500" viewBox="0 0 24 24">
@@ -97,34 +104,25 @@ export default function ProductPage({ addToCart, buyNow, product, variants, erro
                 </svg>
                 <span className="text-gray-600 dark:text-gray-400 ml-3">4 Reviews</span>
               </span>
-              <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200 space-x-2s">
-                <a className="text-gray-500">
-                  <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
-                  </svg>
-                </a>
-                <a className="text-gray-500">
-                  <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-                    <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
-                  </svg>
-                </a>
-                <a className="text-gray-500">
-                  <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
-                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
-                  </svg>
-                </a>
-              </span>
+              
             </div>
             <p className="leading-relaxed">{product.desc}</p>
             <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
               <div className="flex">
                 <span className="mr-3">Color</span>
 
-                {Object.keys(variants).includes('blue') && Object.keys(variants['blue']).includes(size) && <button onClick={() => { refreshVariant(size, 'blue') }} className={`border-2 border-gray-300 ml-1 bg-blue-500  rounded-full w-6 h-6 focus:outline-none ${color === 'blue' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('red') && Object.keys(variants['red']).includes(size) && <button onClick={() => { refreshVariant(size, 'red') }} className={`border-2 border-gray-300 ml-1 bg-red-700 rounded-full w-6 h-6 focus:outline-none ${color === 'red' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('yellow') && Object.keys(variants['yellow']).includes(size) && <button onClick={() => { refreshVariant(size, 'yellow') }} className={`border-2 border-gray-300 ml-1 bg-yellow-500 rounded-full w-6 h-6 focus:outline-none ${color === 'yellow' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('purple') && Object.keys(variants['purple']).includes(size) && <button onClick={() => { refreshVariant(size, 'purple') }} className={`border-2 border-gray-300 ml-1 bg-purple-500 rounded-full w-6 h-6 focus:outline-none ${color === 'purple' ? 'border-black' : 'border-gray-300'}`}></button>}
-                {Object.keys(variants).includes('green') && Object.keys(variants['green']).includes(size) && <button onClick={() => { refreshVariant(size, 'green') }} className={`border-2 border-gray-300 ml-1 bg-green-500 rounded-full w-6 h-6 focus:outline-none ${color === 'green' ? 'border-black' : 'border-gray-300'}`}></button>}
+                {Object.keys(variants).includes('blue') && 
+                <button onClick={() => { refreshVariant(size, 'blue') }} className={`border-2 ml-1 bg-blue-500  rounded-full w-6 h-6 focus:outline-none ${color == 'blue' ? 'border-pink-400' : 'border-gray-300'}`}></button>}
+
+                {Object.keys(variants).includes('red') && 
+                <button onClick={() => { refreshVariant(size, 'red') }} className={`border-2 ml-1 bg-red-700 rounded-full w-6 h-6 focus:outline-none ${color === 'red' ? 'border-pink-400' : 'border-gray-300'}`}></button>}
+
+                {Object.keys(variants).includes('yellow') && 
+                <button onClick={() => { refreshVariant(size, 'yellow') }} className={`border-2 ml-1 bg-yellow-500 rounded-full w-6 h-6 focus:outline-none ${color === 'yellow' ? 'border-pink-400' : 'border-gray-300'}`}></button>}
+                {Object.keys(variants).includes('purple') && 
+                <button onClick={() => { refreshVariant(size, 'purple') }} className={`border-2 ml-1 bg-purple-500 rounded-full w-6 h-6 focus:outline-none ${color === 'purple' ? 'border-pink-400' : 'border-gray-300'}`}></button>}
+                {Object.keys(variants).includes('green') && 
+                <button onClick={() => { refreshVariant(size, 'green') }} className={`border-2 ml-1 bg-green-500 rounded-full w-6 h-6 focus:outline-none ${color === 'green' ? 'border-pink-400' : 'border-gray-300'}`}></button>}
 
               </div>
               <div className="flex ml-6 items-center">
@@ -153,7 +151,7 @@ export default function ProductPage({ addToCart, buyNow, product, variants, erro
               
             </div>
             <div className="pin mt-5 flex space-x-2 text-sm">
-              <input onChange={onChangePin} className='flex mx-1 px-3 py-2 border-gray-400 border-2 rounded-md dark:bg-[#0f172a]' type="text" placeholder='Enter your Pincode' />
+              <input onChange={onChangePin} className='flex mx-1 px-3 py-2 border-gray-400 border-2 rounded-md dark:bg-[#0f172a]' type="number" placeholder='Enter your Pincode' />
               <button onClick={checkServiceability} className={`mx-1 text-white bg-pink-500 border-0 py-2 px-6 focus:outline-none hover:bg-pink-600 rounded ${pin == "" ? "cursor-not-allowed" : ""}`} disabled={pin == ""}>Check</button>
             </div>
             {(!service && service != null) && <div className='text-red-700 text-sm mt-3'>Sorry! We do not deliver to this pincode yet</div>}

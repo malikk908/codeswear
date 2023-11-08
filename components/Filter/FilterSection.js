@@ -8,16 +8,22 @@ const FilterSection = ({ handleCheckboxChange, selectedFilters, handleChange, pr
 
     return (
         <>
-            <div className='mt-10 mb-5 flex items-center gap-x-2 mx-auto'>
-                <FaFilter className='text-lg font-bold text-pink-500' />
-                <h1 className='text-lg font-bold'>Filters:</h1>
+            <div className='text-lg font-bold md:text-4xl mt-10 flex items-center gap-x-2 mx-auto'>
+                <FaFilter className=' text-pink-500' />
+                <h1 className=''>Filters</h1>
+                
+                
 
             </div>
 
+            <hr class="w-40 h-1 mb-10 ml-6  mr-4 my-4 bg-gray-300 border-0 rounded  dark:bg-gray-700"/>         
+
+            
+
 
             <div>
-                <h2 className='mb-3 text-base font-semibold'>Colors</h2>
-                <div className='text-sm'>
+                <h2 className='mb-3 text-base md:text-3xl font-semibold'>Colors</h2>
+                <div className='text-sm md:text-lg'>
                     <input onChange={e => handleCheckboxChange(e, 'colors')} type="checkbox" id="red" name="red" value="red" checked={selectedFilters.colors.includes('red')} />
                     <label htmlFor="red"> Red</label><br />
                     <input onChange={e => handleCheckboxChange(e, 'colors')} type="checkbox" id="yellow" name="yellow" value="yellow" checked={selectedFilters.colors.includes('yellow')} />
@@ -32,8 +38,8 @@ const FilterSection = ({ handleCheckboxChange, selectedFilters, handleChange, pr
             </div>
 
             <div>
-                <h2 className='mb-3 text-base font-semibold'>Size</h2>
-                <div className='text-sm'>
+                <h2 className='mb-3 text-base md:text-3xl font-semibold'>Size</h2>
+                <div className='text-sm md:text-lg'>
                     <input onChange={e => handleCheckboxChange(e, 'sizes')} type="checkbox" id="S" name="S" value="S" checked={selectedFilters.sizes.includes('S')} />
                     <label htmlFor="S"> Small</label><br />
                     <input onChange={e => handleCheckboxChange(e, 'sizes')} type="checkbox" id="M" name="M" value="M" checked={selectedFilters.sizes.includes('M')} />
@@ -47,10 +53,10 @@ const FilterSection = ({ handleCheckboxChange, selectedFilters, handleChange, pr
                 </div>
             </div>
 
-            <div className='flex flex-col items-center w-40 px-5'>
-                <h2 className='mb-3 text-base font-semibold'>Price</h2>
+            <div className='flex flex-col items-center w-40 px-2'>
+                <h2 className='mb-3 text-base md:text-3xl font-semibold'>Price</h2>
 
-                <div className='flex justify-between w-full text-xs'>
+                <div className='flex justify-between w-full text-xs md:text-lg'>
                     <span className='w-5'>Min: {priceRange[0]}</span>
                     <span className='w-5'>Max: {priceRange[1]}</span>
                 </div>

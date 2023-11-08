@@ -128,7 +128,7 @@ const Tshirts = ({ products }) => {
         </div>
 
 
-        <div className="hidden md:flex flex-col items-center h-full sticky top-24 border rounded-md ml-3 pb-10">
+        <div className="hidden md:flex flex-col items-center h-full w-[20%] sticky top-24 pr-5  ml-3 pb-10">
           <FilterSection
             handleCheckboxChange={handleCheckboxChange}
             selectedFilters={selectedFilters}
@@ -142,7 +142,7 @@ const Tshirts = ({ products }) => {
         <section className="text-gray-600 body-font w-full">
 
           <div className="container px-5 py-7 mx-auto">
-            <h1 className='text-3xl font-extrabold mb-5 dark:text-gray-300'>Tshirts</h1>
+            <h1 className='text-3xl font-extrabold mb-5 text-gray-900  dark:text-gray-300'>Tshirts</h1>
             <div className='md:hidden mb-3'>
               <button
                 className='flex items-center justify-between p-1 w-auto bg-white text-black dark:bg-[#0f172a] dark:text-gray-300 ;'
@@ -169,7 +169,7 @@ const Tshirts = ({ products }) => {
 
             </div>
 
-            <div className="grid gap-3 md:gap-4 grid-cols-[repeat(auto-fill,minmax(140px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300,1fr))]">
+            <div className="grid gap-3 md:gap-4 grid-cols-[repeat(auto-fill,minmax(160px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(260px,1fr))] lg:grid-cols-[repeat(auto-fill,minmax(300,1fr))]">
 
               {filteredProducts.length === 0 &&
 
