@@ -16,7 +16,7 @@ import { FaHome } from 'react-icons/fa';
 
 const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
 
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme, systemTheme } = useTheme()
 
   const [loaded, setLoaded] = useState(false);
 
@@ -56,7 +56,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
   }
 
   const toggleTheme = () => {
-    if (theme === "light") {
+    if (theme === "light" || systemTheme ==="light") {
       setTheme("dark")
     } else {
       setTheme("light")
@@ -65,6 +65,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
 
   console.log(loaded)
   console.log(theme)
+  console.log(systemTheme)
 
 
 
@@ -107,10 +108,10 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
             onClick={toggleTheme}
             className='text-lg md:text-2xl mx-2'>
 
-            {theme === "light" && loaded &&
+            {(theme === "light" || (theme === "system" && systemTheme === "light")) && loaded &&
               <BsMoonStarsFill className='text-pink-600' />}
 
-            {theme === "dark" && loaded &&
+            {(theme === "dark" || (theme === "system" && systemTheme === "dark")) && loaded &&
               <BsSunFill className='text-pink-600' />}
 
           </button>
